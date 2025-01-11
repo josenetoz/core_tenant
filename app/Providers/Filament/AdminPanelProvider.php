@@ -7,6 +7,7 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use App\Models\Organization;
+use App\Filament\Pages\Backup\Backup; // Ensure this class exists in the specified namespace
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use App\Http\Middleware\VerifyIsAdmin;
@@ -22,6 +23,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Croustibat\FilamentJobsMonitor\FilamentJobsMonitorPlugin;
+use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -83,10 +85,12 @@ class AdminPanelProvider extends PanelProvider
 
             ->plugins([
                 // ...
-                FilamentJobsMonitorPlugin::make()
-                    ->enableNavigation(
-                    
-                    ),
+                FilamentJobsMonitorPlugin::make(),
+                FilamentSpatieLaravelBackupPlugin::make()
+                    ->usingPage(Backup::class)
+                    ->usingPolingInterval('10s') // default value is 4s 
+                    ->usingQueue('default') // default value is null
+                    ->timeout(120) // default value is 120s
                 ]);    
     }
 }
