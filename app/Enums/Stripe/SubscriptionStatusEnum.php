@@ -7,7 +7,6 @@ use Filament\Support\Contracts\HasLabel;
 
 enum SubscriptionStatusEnum: string implements HasLabel, HasColor
 {
-
     case INCOMPLETE = 'incomplete';
     case TRIALING = 'trialing';
     case ACTIVE = 'active';
@@ -18,9 +17,8 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
     case PAUSED = 'paused';
   
     public function getLabel(): ?string
-        {
+    {
         return match ($this) {
-
             self::INCOMPLETE => 'Em Validação',
             self::TRIALING => 'Período Teste',
             self::ACTIVE => 'Ativa',
@@ -29,13 +27,12 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
             self::UNPAID => 'Cartão Inválido',
             self::CANCELED => 'Cancelado',
             self::PAUSED => 'Pausado',
-          
         };
     }
-    public function getColor(): string|array|null
-        {
-        return match ($this) {
 
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
             self::INCOMPLETE => 'warning',
             self::TRIALING => 'gray',
             self::ACTIVE => 'success',
@@ -47,6 +44,3 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
         };
     }
 }
-
-
-

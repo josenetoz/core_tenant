@@ -2,21 +2,18 @@
 
 namespace App\Filament\Resources\OrganizationResource\RelationManagers;
 
+
+use Illuminate\Support\Env;
 use Filament\Tables;
 use Stripe\StripeClient;
 use Filament\Tables\Table;
-use Illuminate\Support\Env;
 use App\Models\Subscription;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Enums\Stripe\SubscriptionStatusEnum;
-use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasLabel;
 
 
 class SubscriptionRelationManager extends RelationManager
@@ -36,6 +33,8 @@ class SubscriptionRelationManager extends RelationManager
                 TextColumn::make('stripe_status')
                     ->label('Status')
                     ->badge()
+                    ->formatStateUsing(fn ($state) => SubscriptionStatusEnum::from($state)->getLabel())
+                    ->color(fn ($state) => SubscriptionStatusEnum::from($state)->getColor())
                     ->sortable()
                     ->searchable(),
 
@@ -64,17 +63,25 @@ class SubscriptionRelationManager extends RelationManager
                 Action::make('Cancelar Assinatura')
                 ->requiresConfirmation()
                 ->action(function (Action $action, $record) {                                     
-                    $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
-                    $stripe->subscriptions->cancel($record->stripe_id);
-                    Notification::make()
-                        ->title('Assinatura Cancelada')
-                        ->body('Assinatura cancelada com sucesso!')
-                        ->success()
-                        ->send();
+                    try {
+                        $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
+                        $stripe->subscriptions->cancel($record->stripe_id);
+                        Notification::make()
+                            ->title('Assinatura Cancelada')
+                            ->body('Assinatura cancelada com sucesso!')
+                            ->success()
+                            ->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Erro ao Cancelar')
+                            ->body('Ocorreu um erro ao cancelar a assinatura. Tente novamente mais tarde.')
+                            ->danger()
+                            ->send();
+                    }
                 })
                 ->color('danger') 
                 ->icon('heroicon-o-key'), 
-                ])
+        ])
             ])
 
             ->bulkActions([

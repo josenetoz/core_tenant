@@ -11,15 +11,13 @@ class Subscription extends Model
     use HasFactory;
 
     protected $casts = [
-        'stripe_status'=>SubscriptionStatusEnum::class,
+        'stripe_status' => SubscriptionStatusEnum::class,
     ];
-
-    // Método para garantir a conversão explícita
    
-    
     public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 }
+
 
