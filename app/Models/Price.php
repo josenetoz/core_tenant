@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\Stripe\ProductCurrencyEnum;
+use App\Enums\Stripe\ProductIntervalEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Price extends Model
 {
@@ -16,9 +18,12 @@ class Price extends Model
         'currency',
         'interval',
         'unit_amount',
-
     ];
 
+    protected $casts = [
+        'interval' => ProductIntervalEnum::class,
+        'currency' => ProductCurrencyEnum::class,
+    ];
   
     public function product(): BelongsTo
     {

@@ -11,6 +11,8 @@ use Illuminate\Support\Env;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use App\Enums\Stripe\ProductCurrencyEnum;
+use App\Enums\Stripe\ProductIntervalEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -31,26 +33,19 @@ class PricesRelationManager extends RelationManager
               Select::make('currency')
                 ->label('Moeda')
                 ->required()
-                ->options([
-                    'usd' => 'USD',
-                    'brl' => 'BRL',
-                    'eur' => 'EUR',
-                ]),
+                ->searchable()
+                ->options(ProductCurrencyEnum::class),
                 
                 Select::make('interval')
-                ->label('Intervalo')
-                ->options([
-                    'year' => 'Anual',
-                    'month' => 'Mensal',
-                    'week' => 'Semanal',
-                    'day' => 'Diaria',
-                ])
-                ->required(),
+                    ->label('Intervalo de Cobrança')
+                    ->options(ProductIntervalEnum::class)
+                    ->searchable()
+                    ->required(),
 
                 Money::make('unit_amount')
-                ->label('Preço')
-                ->default('100,00')
-                ->required(),
+                    ->label('Preço')
+                    ->default('100,00')
+                    ->required(),
                
             ]);
     }
@@ -61,22 +56,27 @@ class PricesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('price')
             ->columns([
-
                TextColumn::make('stripe_price_id')
-                ->label('Id Gateway Pagamento')
-                ->sortable(),
+                    ->label('Id Gateway Pagamento')
+                    ->sortable(),
 
                TextColumn::make('currency')
-                ->label('Moeda')
-                ->sortable(),
+                    ->label('Moeda')
+                    ->badge()
+                    ->alignCenter()
+                    ->sortable(),
 
                 TextColumn::make('interval')
-                ->label('Intervalo')
-                ->sortable(),
+                    ->label('Intervalo de Cobrança')
+                    ->badge()
+                    ->sortable()
+                    ->alignCenter(),
 
                 TextColumn::make('unit_amount')
-                ->label('Preço')
-                ->sortable(),
+                    ->label('Preço')
+                    ->money('BRL')
+                    ->sortable(),
+                    
             ])
             ->filters([
                 //
@@ -97,13 +97,11 @@ class PricesRelationManager extends RelationManager
                       'recurring' => ['interval' => $record->interval],
                       'product' => $product_id,
                     ]);
-
+                    
                     $record->update([
                         'stripe_price_id' => $stripePrice->id,
                     ]); 
-
                     $record->save();                  
-
                 }),
             ])
             ->actions([

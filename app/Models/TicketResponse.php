@@ -18,6 +18,10 @@ class TicketResponse extends Model
         'message',
     ];
 
+    protected $casts = [
+        'file' => 'array',
+    ];
+
     public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class);
