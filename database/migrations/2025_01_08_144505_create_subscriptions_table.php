@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Organization::class)->constrained()->cascadeOnDelete();
             $table->string('type');
             $table->string('stripe_id')->unique();
-            $table->string('stripe_status');
+            $table->string('stripe_status')->default('incomplete');
             $table->string('stripe_price')->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('trial_ends_at')->nullable();

@@ -10,22 +10,8 @@ class Subscription extends Model
 {
     use HasFactory;
   
-    protected $fillable = [
-        
-        'organization_id',
-        'type',
-        'stripe_id',
-        'stripe_status',
-        'stripe_price',
-        'quantity',
-        'trial_ends_at',
-        'ends_at',
-    ];
-
     protected $casts = [
-        
-        'stripe_status' => SubscriptionStatusEnum::class,
-        
+        'stripe_status' => SubscriptionStatusEnum::class
     ];
 
     public function organization()

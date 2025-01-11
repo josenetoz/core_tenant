@@ -32,16 +32,15 @@ class SubscriptionRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('type')
+            ->recordTitleAttribute('stripe_status')
             ->columns([
 
                 TextColumn::make('stripe_status')
                     ->label('Assinatura')
+                    ->badge()
                     ->sortable()
                     ->searchable()
-                    ->alignCenter()
-                    ->badge(),
-                        
+                    ->alignCenter(),
 
                 TextColumn::make('type')
                     ->label('Plano'),

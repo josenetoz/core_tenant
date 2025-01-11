@@ -21,7 +21,7 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
         {
             return match ($this) {
                 
-                self::TRIALING => 'Periodo Teste',
+                self::TRIALING => 'Período Teste',
                 self::ACTIVE => 'Ativa',
                 self::INCOMPLETE => 'Em Validação',
                 self::INCOMPLETE_EXPIRED => 'Cancelado',
@@ -38,12 +38,12 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
                 
                 self::TRIALING => 'gray',
                 self::ACTIVE => 'success',
-                self::INCOMPLETE => 'alert',
+                self::INCOMPLETE => 'warning',
                 self::INCOMPLETE_EXPIRED => 'danger',
-                self::PAST_DUE => 'alert',
+                self::PAST_DUE => 'warning',
                 self::UNPAID => 'danger',
                 self::CANCELED => 'danger',
-                self::PAUSED => 'alert',
+                self::PAUSED => 'warning',
 
             };
         }
