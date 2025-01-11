@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\OrganizationResource\RelationManagers;
 
-use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
 use Stripe\StripeClient;
 use Filament\Tables\Table;
 use Illuminate\Support\Env;
@@ -17,6 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Enums\Stripe\SubscriptionStatusEnum;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
 
 class SubscriptionRelationManager extends RelationManager
 {
@@ -25,22 +26,18 @@ class SubscriptionRelationManager extends RelationManager
     protected static ?string $modelLabelPlural = "Assinaturas";
     protected static ?string $title = 'Subscrições do Tenant';
  
-    protected function canCreate(): bool
-    {
-       return false;
-    }
+
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('stripe_status')
+           
             ->columns([
 
                 TextColumn::make('stripe_status')
-                    ->label('Assinatura')
+                    ->label('Status')
                     ->badge()
                     ->sortable()
-                    ->searchable()
-                    ->alignCenter(),
+                    ->searchable(),
 
                 TextColumn::make('type')
                     ->label('Plano'),
@@ -77,12 +74,13 @@ class SubscriptionRelationManager extends RelationManager
                 })
                 ->color('danger') 
                 ->icon('heroicon-o-key'), 
-                
+                ])
             ])
-            ])
+
             ->bulkActions([
              
             ]);
            
     }
+
 }
