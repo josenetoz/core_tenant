@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Closure;
-use function App\Support\tenant;
-
 use App\Data\Cashier\Stripe;
 use App\Models\Organization;
-use Filament\Pages\Dashboard;
 use Illuminate\Http\Request;
+use Filament\Pages\Dashboard;
+use function App\Support\tenant;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyBillableIsSubscribed
@@ -29,9 +28,6 @@ class VerifyBillableIsSubscribed
         }
         
         $tenant = tenant(Organization::class);
- 
-        
-        //dd($tenant);
         $stripeConfig = Stripe::fromConfig();
 
         foreach ($stripeConfig->plans() as $plan) {
@@ -43,8 +39,6 @@ class VerifyBillableIsSubscribed
         if ($request->getQueryString() === 'action=subscribe') {
             return $next($request);
         }
-        
-
         return redirect(Dashboard::getUrl(['action' => 'subscribe']));
     }
 }

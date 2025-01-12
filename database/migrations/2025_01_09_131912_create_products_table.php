@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->integer('trial_days')->default(0);
             $table->string('image')->nullable();
             $table->boolean('active')->default(true);
             $table->string('stripe_id')->nullable()->unique();

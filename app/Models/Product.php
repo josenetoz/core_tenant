@@ -18,8 +18,8 @@ class Product extends Model
         'description',
         'image',
         'active',
+        'trial_days',
         'stripe_id',
-
     ];
 
     protected $casts = [
