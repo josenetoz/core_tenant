@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use App\Enums\Stripe\ProductCurrencyEnum;
 use App\Enums\Stripe\ProductIntervalEnum;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -71,6 +72,10 @@ class PricesRelationManager extends RelationManager
                     ->badge()
                     ->sortable()
                     ->alignCenter(),
+                
+                ToggleColumn::make('is_active')
+                    ->label('Ativo para cliente')
+                    ->alignCenter(),    
 
                 TextColumn::make('unit_amount')
                     ->label('Preço')

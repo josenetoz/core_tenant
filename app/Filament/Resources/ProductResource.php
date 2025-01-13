@@ -11,14 +11,18 @@ use Filament\Tables\Table;
 use Illuminate\Support\Env;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProductResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Filament\Resources\ProductResource\RelationManagers\PricesRelationManager;
+use App\Filament\Resources\ProductResource\RelationManagers\ProductFeaturesRelationManager;
 
 class ProductResource extends Resource
 {
@@ -36,16 +40,33 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('description')
-                    ->maxLength(255),
-                TextInput::make('image')
-                    ->maxLength(255),
-                TextInput::make('stripe_id')
-                    ->readOnly(),
 
+                Fieldset::make('Label')
+                    ->schema([
+                        TextInput::make('stripe_id')
+                            ->label('Id Plano Stripe')
+                            ->readOnly(),
+                    ]),
+
+                Fieldset::make('Label')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nome do Plano')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('description')
+                            ->label('Descrição do Plano')
+                            ->required()
+                            ->maxLength(255),
+                    ])->columns(2),        
+
+                    Fieldset::make('Imagem do Plano')
+                    ->schema([
+                        FileUpload::make('image')
+                            ->label('Imagem do Plano')
+                            ->image()
+                            ->imageEditor(),
+                    ]),  
             ]);
     }
 
@@ -55,12 +76,27 @@ class ProductResource extends Resource
             ->columns([
 
                 TextColumn::make('stripe_id')
-                    ->label('Id Gateway Pagamento')
+                    ->label('Id Plano Stripe')
                 ->searchable(),
+
+                TextColumn::make('description')
+                    ->label('Descrição do Plano')
+                    ->searchable(),
 
                 TextColumn::make('name')
                     ->label('Nome do Plano')
-                    ->searchable(),          
+                    ->searchable(),
+                 
+                TextColumn::make('prices_count')
+                    ->label('Preços Cadastrados')
+                    ->alignCenter()
+                    ->sortable()
+                    ->getStateUsing(fn ($record) => (string) $record->prices()->count()),
+                    
+                TextColumn::make('features_count')
+                    ->label('Características')
+                    ->alignCenter()
+                    ->getStateUsing(fn ($record) => (string) $record->product_features()->where('is_active', true)->count()),    
               
                 ToggleColumn::make('active')
                     ->label('Ativo')
@@ -97,6 +133,7 @@ class ProductResource extends Resource
     {
         return [
             PricesRelationManager::class,
+            ProductFeaturesRelationManager::class,
         ];
     }
 

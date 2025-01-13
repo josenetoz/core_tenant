@@ -17,7 +17,7 @@ class Product extends Model
         'name',
         'description',
         'image',
-        'active',
+        'is_active',
         'trial_days',
         'stripe_id',
     ];
@@ -31,4 +31,12 @@ class Product extends Model
     {
         return $this->hasMany(Price::class);
     }
+
+    public function product_features(): HasMany
+    {
+        return $this->hasMany(ProductFeature::class);
+    }
+
+
+
 }

@@ -3,6 +3,7 @@
 use Laravel\Cashier\Console\WebhookCommand;
 use Laravel\Cashier\Invoices\DompdfInvoiceRenderer;
 
+
 return [
 
     /*
@@ -121,5 +122,7 @@ return [
     */
 
     'logger' => env('CASHIER_LOGGER'),
+
+    'model' => env('CASHIER_MODEL', class_exists(App\Models\Organization::class) ? App\Models\Organization::class : App\Models\Organization::class),
 
 ];

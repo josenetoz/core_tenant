@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Product;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -17,11 +18,22 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->integer('trial_days')->default(0);
             $table->string('image')->nullable();
-            $table->boolean('active')->default(true);
+            $table->boolean('is_active')->default(true);
             $table->string('stripe_id')->nullable()->unique();
             $table->timestamps();
         });
+        
+        Schema::create('product_features', function (Blueprint $table) {
+            $table->id()->index();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->text('description');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
     }
+
+    
 
     /**
      * Reverse the migrations.
