@@ -96,6 +96,8 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
+
+
                
             ])
             ->authMiddleware([
@@ -112,13 +114,13 @@ class AppPanelProvider extends PanelProvider
                     ->setSort(10)
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowBrowserSessionsForm()
+                    ->shouldShowBrowserSessionsForm()              
                     ->shouldShowAvatarForm(
                         value: true,
                         directory: 'avatars', // image will be stored in 'storage/app/public/avatars
                     ) 
                     ->customProfileComponents([
-                        \App\Livewire\ColorProfileComponent::class,
+                        \App\Livewire\ColorProfileComponent::class,                       
                     ])
             ])
 
