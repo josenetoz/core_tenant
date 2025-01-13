@@ -15,12 +15,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements FilamentUser, HasTenants, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -66,19 +65,19 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
      */
 
   
-     public function organization(): BelongsToMany
+     public function organizations(): BelongsToMany
      {
          return $this->belongsToMany(Organization::class);
      }
          
      public function getTenants(Panel $panel): Collection
      {
-         return $this->organization;
+         return $this->organizations;
      }
   
      public function canAccessTenant(Model $organization): bool
      {
-         return $this->organization()->whereKey($organization)->exists();
+         return $this->organizations()->whereKey($organization)->exists();
      }
     public function canAccessPanel(Panel $panel): bool
     {
@@ -90,4 +89,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         return $this->avatar_url ? Storage::url($this->avatar_url) : null;
         
     }
+  
+
 }

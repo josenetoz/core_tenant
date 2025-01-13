@@ -14,17 +14,17 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Organization;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\TenantSuport\TicketTypeEnum;
 use App\Enums\TenantSuport\TicketStatusEnum;
@@ -32,6 +32,7 @@ use App\Enums\TenantSuport\TicketPriorityEnum;
 use App\Filament\Resources\TicketResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Filament\Resources\TicketResource\RelationManagers\TicketResponsesRelationManager;
 
 class TicketResource extends Resource
 {
@@ -237,7 +238,7 @@ class TicketResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TicketResponsesRelationManager::class,
         ];
     }
 

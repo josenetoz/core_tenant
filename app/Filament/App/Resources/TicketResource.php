@@ -24,6 +24,7 @@ use App\Enums\TenantSuport\TicketPriorityEnum;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\App\Resources\TicketResource\Pages;
 use App\Filament\App\Resources\TicketResource\RelationManagers;
+use App\Filament\App\Resources\TicketResource\RelationManagers\TicketResponsesRelationManager;
 
 class TicketResource extends Resource
 {
@@ -172,7 +173,7 @@ class TicketResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TicketResponsesRelationManager::class,
         ];
     }
 

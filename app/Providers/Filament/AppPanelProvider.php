@@ -57,7 +57,8 @@ class AppPanelProvider extends PanelProvider
                 ->icon('heroicon-m-user-circle')
                 //If you are using tenancy need to check with the visible method where ->company() is the relation between the user and tenancy model as you called
                 ->visible(function (): bool {
-                    return Auth::user()->organization()->exists();
+                    $user = Auth::user();
+                    return $user && method_exists($user, 'organizations') && $user->organizations()->exists();
                 })
         ])
         ->userMenuItems([
@@ -96,14 +97,10 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
-
-
-               
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
-
             ->plugins([
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
@@ -123,7 +120,6 @@ class AppPanelProvider extends PanelProvider
                         \App\Livewire\ColorProfileComponent::class,                       
                     ])
             ])
-
             ->tenant(Organization::class, ownershipRelationship: 'organization', slugAttribute: 'slug')
             ->tenantRegistration(RegisterOrganization::class)
             ->tenantBillingProvider(new BillingProvider())
