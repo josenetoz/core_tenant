@@ -1,67 +1,162 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FilamentPHP Tenant Based in Organization/Company
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An example project demonstrating a MultiTenant SingleDatabase system fully built in Laravel and Filament, integrated with Stripe for Subscription management. The system includes the following features:
 
-## About Laravel
+1 - Creation of Plans, Prices, and Features stored in the database and integrated via the Stripe API.
+2 - Admin Panel for Managing Tenants and Subscriptions.
+3 - API-based Client Creation when registering the Tenant
+4 - Modal for Tenant to choose Plans and Complete the Subscription (Stripe Management)
+5 - Feature for Tenant to create tickets for the Tenant's manager.
+6 - Profile editing with theme color customization.
+7 - Integration of Icons with FontAwesome.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## The plugins used in this project may include:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+FontAwesome - ([text](https://v2.filamentphp.com/tricks/use-font-awesome-or-any-other-icon-set))
+Brazilian Form Fields - [text](https://filamentphp.com/plugins/leandrocfe-brazilian-form-fields)
+Edit Profile - [text](https://filamentphp.com/plugins/joaopaulolndev-edit-profile)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Prerequisites
 
-## Learning Laravel
+-   Create a Stripe account and enable trial mode ([text](https://stripe.com/))
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   Docker (The Dockerfile for this project already includes all the necessary resources to run the project.)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Base Image: Uses php:8.3-fpm as the base image.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. User Setup: Defines a user with a specified UID and creates a home directory.
 
-## Laravel Sponsors
+3. System Dependencies: Installs essential packages such as:
+   git,
+   curl,
+   libpng-dev,
+   libzip-dev,
+   and others required for running the project.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. Node.js & NPM: Adds the Node.js repository and installs Node.js and the latest version of NPM.
 
-### Premium Partners
+5. PHP Extensions, all necessary PHP extensions:
+   pdo_mysql,
+   mbstring,
+   gd,
+   intl,
+   zip,
+   etc.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+6. Composer: Copies the latest Composer binary into the container to manage PHP dependencies.
+
+7. Redis: Installs Redis and enables the extension.
+
+8. Stripe CLI: Installs the Stripe CLI for Stripe-related operations (To Listen Webhook stripe events)
+
+9. PHPStan: Installs PHPStan globally for static analysis.
+
+10. Working Directory: Sets the working directory to /var/www.
+
+11. User Switching: Switches to a non-root user to run Composer and Artisan commands securely.
+
+## Installation
+
+1. Clone the repository
+
+```bash
+git
+cd
+```
+
+2. Copy .ENV file
+
+```bash
+cp .env.example .env
+```
+
+3. Configure your database in `.env`:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=billing_system
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+4. Configure Stripe keys in `.env`
+
+```
+STRIPE_KEY=your_stripe_key
+STRIPE_SECRET=your_stripe_secret
+```
+
+5. Run Docker
+
+```bash
+docker compose up -d
+```
+
+6. Access docker App container
+
+```bash
+docker compose exec app bash
+```
+
+7. Inside the container, configure environment variables
+
+```bash
+php artisan key:generate
+```
+
+8. Inside the container, Install PHP dependencies
+
+```bash
+composer install
+```
+
+9. Inside the container, Run migrations and seeders
+
+```bash
+php artisan migrate --seed
+```
+
+10. Inside the container, Link storage for file uploads
+
+```bash
+php artisan storage:link
+```
+
+11. Inside the container run the command below (To Listen Webhook stripe events)
+
+```bash
+stripe listen -f http://0.0.0.0/stripe/webhook
+```
+
+12. The first time you run it, it will generate your webhook key. copy and paste it into your env file.
+
+```
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+```
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository
+2. Create your feature changes in your branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-## Code of Conduct
+## Security
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover any security-related issues, please email wallacemartinss@gmail.com instead of using the issue tracker.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# core_tenant
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Credits
+
+-   [Wallace Martins](https://github.com/wallacemartinss)
+-   [All Contributors](../../contributors)
+
+## Support
+
+For support, please email wallacemartinss@gmail.com or create an issue in the GitHub repository.
