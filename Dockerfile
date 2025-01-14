@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
 # Add Node.js repository and install Node.js & NPM
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
@@ -45,6 +46,9 @@ RUN pecl install -o -f redis \
 RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor > /usr/share/keyrings/stripe.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" > /etc/apt/sources.list.d/stripe.list
 RUN apt-get update -y && apt-get install -y stripe
+
+# Install PHPStan
+RUN composer global require phpstan/phpstan
 
 # Set working directory
 WORKDIR /var/www
