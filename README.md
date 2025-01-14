@@ -1,7 +1,7 @@
 <p align="center">
-	<a href="#"  target="_blank" title="FilamentPHP Tenant Based in Organization/Company">
-		
-	</a>
+    <h2 align="center"> 
+        FilamentPHP Tenant Based in Organization/Company
+    </h2>
 </p>
 
 ## About this Project
@@ -198,6 +198,6 @@ For support, please email wallacemartinss@gmail.com or create an issue in the Gi
 
 <br>
 <h4 align="center"> 
-	🚧  roject 🚀 under construction...  🚧
+	🚧  Project 🚀 under construction...  🚧
 </h4>
 <br>
