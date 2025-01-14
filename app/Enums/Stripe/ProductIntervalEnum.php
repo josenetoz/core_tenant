@@ -11,7 +11,7 @@ enum ProductIntervalEnum: string implements HasLabel, HasColor
     case MONTH = 'month';
     case WEEK = 'week';
     case DAY = 'day';
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::YEAR => 'Anual',

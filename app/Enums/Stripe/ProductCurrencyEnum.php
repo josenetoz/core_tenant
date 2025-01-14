@@ -10,13 +10,13 @@ enum ProductCurrencyEnum: string implements HasLabel, HasColor
     case BRL = 'brl';
     case EUR = 'eur';
     case USD = 'usd';
-   
-    public function getLabel(): ?string
+
+    public function getLabel(): string
     {
         return match ($this) {
             self::BRL => 'Real',
             self::EUR => 'Euro',
-            self::USD => 'Dolar', 
+            self::USD => 'Dolar',
         };
     }
     public function getColor(): string|array|null

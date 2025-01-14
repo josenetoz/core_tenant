@@ -15,8 +15,8 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
     case UNPAID = 'unpaid';
     case CANCELED = 'canceled';
     case PAUSED = 'paused';
-  
-    public function getLabel(): ?string
+
+    public function getLabel(): string
     {
         return match ($this) {
             self::INCOMPLETE => 'Em Validação',

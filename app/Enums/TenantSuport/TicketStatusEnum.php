@@ -13,10 +13,10 @@ enum TicketStatusEnum: string implements HasLabel, HasColor
     case RESOLVED = 'resolved';
     case CLOSED = 'closed';
 
-        public function getLabel(): ?string
+        public function getLabel(): string
         {
             return match ($this) {
-                
+
                 self::OPEN => 'Aberto',
                 self::INPROGRESS => 'Em Progresso',
                 self::RESOLVED => 'Resolvido',
@@ -27,7 +27,7 @@ enum TicketStatusEnum: string implements HasLabel, HasColor
         public function getColor(): string|array|null
         {
             return match ($this) {
-                
+
                 self::OPEN => 'gray',
                 self::INPROGRESS => 'warning',
                 self::RESOLVED => 'success',

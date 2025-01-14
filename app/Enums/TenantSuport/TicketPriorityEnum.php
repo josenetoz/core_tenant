@@ -13,27 +13,27 @@ enum TicketPriorityEnum: string implements HasLabel, HasColor
     case HIGH = 'high';
     case URGENT = 'urgent';
 
-        public function getLabel(): ?string
+        public function getLabel(): string
         {
             return match ($this) {
-                
+
                 self::LOW => 'Baixa',
                 self::MEDIUM => 'Média',
                 self::HIGH => 'Alta',
                 self::URGENT => 'Urgente',
-              
+
             };
         }
 
         public function getColor(): string|array|null
         {
             return match ($this) {
-                
+
                 self::LOW => 'success',
                 self::MEDIUM => 'gray',
                 self::HIGH => 'warning',
                 self::URGENT => 'danger',
-              
+
             };
         }
 }
