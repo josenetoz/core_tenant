@@ -12,13 +12,13 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 ## The plugins used in this project may include:
 
-FontAwesome - ([text](https://v2.filamentphp.com/tricks/use-font-awesome-or-any-other-icon-set))
-Brazilian Form Fields - [text](https://filamentphp.com/plugins/leandrocfe-brazilian-form-fields)
-Edit Profile - [text](https://filamentphp.com/plugins/joaopaulolndev-edit-profile)
+FontAwesome - ([link](https://v2.filamentphp.com/tricks/use-font-awesome-or-any-other-icon-set))
+Brazilian Form Fields - [link](https://filamentphp.com/plugins/leandrocfe-brazilian-form-fields)
+Edit Profile - [link](https://filamentphp.com/plugins/joaopaulolndev-edit-profile)
 
 ## Prerequisites
 
--   Create a Stripe account and enable trial mode ([text](https://stripe.com/))
+-   Create a Stripe account and enable trial mode ([link](https://stripe.com/))
 
 -   Docker (The Dockerfile for this project already includes all the necessary resources to run the project.)
 
