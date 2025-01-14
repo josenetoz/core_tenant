@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -25,17 +26,23 @@ class ProductFeaturesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                TextInput::make('name')
+
+                Fieldset::make('Característica')
+                ->schema([
+                    TextInput::make('name')
                     ->label('Nome da Característica')
                     ->required()
                     ->maxLength(255),
+                ])->columns(1),        
 
-                Textarea::make('description')
+                Fieldset::make('Descrição da Característica')
+                ->schema([
+                    Textarea::make('description')
                     ->label('Descrição da Característica')
                     ->required()
                     ->maxLength(255),
-
-             
+                ])->columns(1),        
+                             
             ]);
 
     }
