@@ -19,14 +19,15 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 ## The plugins used in this project may include:
 
 -   [laravel](https://github.com/laravel/framework)
--   [filament](https://github.com/filamentphp/filament)
+-   [Filament](https://github.com/filamentphp/filament)
 -   [FontAwesome](https://v2.filamentphp.com/tricks/use-font-awesome-or-any-other-icon-set)
 -   [Brazilian Form Fields](https://filamentphp.com/plugins/leandrocfe-brazilian-form-fields)
 -   [Edit Profile](https://filamentphp.com/plugins/joaopaulolndev-edit-profile)
+-   [Spatie Laravel Backup](https://filamentphp.com/plugins/shuvroroy-spatie-laravel-backup)
 
 ## Prerequisites
 
-1. Create a Stripe account and enable trial mode [Stripe](https://stripe.com/)
+1. Create a Stripe account and enable trial mode - [Stripe](https://stripe.com/)
 
 2. Docker and docker-compose (The Dockerfile for this project already includes all the necessary resources to run the project.)
 
@@ -197,7 +198,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 For support, please email wallacemartinss@gmail.com or create an issue in the GitHub repository.
 
 <br>
-<h4 align="center"> 
-	🚧  Project 🚀 under construction...  🚧
-</h4>
+    <h4 align="center"> 
+        🚧  Project 🚀 under construction...  🚧
+    </h4>
 <br>
