@@ -17,6 +17,7 @@ class Price extends Model
         'stripe_price_id',
         'currency',
         'is_active',
+        'trial_period_days',
         'interval',
         'unit_amount',
     ];
@@ -25,7 +26,7 @@ class Price extends Model
         'interval' => ProductIntervalEnum::class,
         'currency' => ProductCurrencyEnum::class,
     ];
-  
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

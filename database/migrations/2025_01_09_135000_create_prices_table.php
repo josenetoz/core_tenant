@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('stripe_price_id')->nullable();
             $table->string('currency');
             $table->string('interval');
+            $table->integer('trial_period_days')->default(0);
             $table->boolean('is_active')->default(true);
             $table->decimal('unit_amount', 8, 2);
             $table->timestamps();

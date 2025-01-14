@@ -16,13 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->integer('trial_days')->default(0);
             $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('stripe_id')->nullable()->unique();
             $table->timestamps();
         });
-        
+
         Schema::create('product_features', function (Blueprint $table) {
             $table->id()->index();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
@@ -33,7 +32,7 @@ return new class extends Migration
         });
     }
 
-    
+
 
     /**
      * Reverse the migrations.

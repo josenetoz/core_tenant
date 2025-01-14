@@ -18,21 +18,24 @@ class Product extends Model
         'description',
         'image',
         'is_active',
-        'trial_days',
         'stripe_id',
     ];
 
     protected $casts = [
         'image' => 'array'
-    ];   
+    ];
 
-  
+
     public function prices(): HasMany
     {
         return $this->hasMany(Price::class);
     }
 
     public function product_features(): HasMany
+    {
+        return $this->hasMany(ProductFeature::class);
+    }
+    public function features()
     {
         return $this->hasMany(ProductFeature::class);
     }

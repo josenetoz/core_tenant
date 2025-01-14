@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Organization extends Model 
+class Organization extends Model
 {
     use HasFactory;
     use Billable;
@@ -19,18 +19,18 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'document_number',
+        'stripe_id',
         'email',
         'phone',
-        'slug',        
-       
-
+        'slug',
+        'trial_ends_at',
     ];
 
-   
+
      /**
      * @return BelongsToMany<User, $this>
      */
-   
+
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class , 'organization_user', 'organization_id', 'user_id');

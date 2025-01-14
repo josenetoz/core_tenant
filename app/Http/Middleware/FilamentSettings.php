@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Filament\Support\Facades\FilamentColor;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class FilamentSettings
@@ -16,11 +17,11 @@ class FilamentSettings
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $color = auth()->user()?->settings['color'] ?? config('filament.theme.colors.primary');
+        $color = Auth::user()?->settings['color'] ?? config('filament.theme.colors.primary');
         FilamentColor::register([
             'primary' => $color,
         ]);
-        
+
         return $next($request);
     }
 }

@@ -58,7 +58,7 @@ class ProductResource extends Resource
                             ->label('Descrição do Plano')
                             ->required()
                             ->maxLength(255),
-                    ])->columns(2),        
+                    ])->columns(2),
 
                     Fieldset::make('Imagem do Plano')
                     ->schema([
@@ -66,7 +66,7 @@ class ProductResource extends Resource
                             ->label('Imagem do Plano')
                             ->image()
                             ->imageEditor(),
-                    ]),  
+                    ]),
             ]);
     }
 
@@ -86,19 +86,19 @@ class ProductResource extends Resource
                 TextColumn::make('name')
                     ->label('Nome do Plano')
                     ->searchable(),
-                 
+
                 TextColumn::make('prices_count')
                     ->label('Preços Cadastrados')
                     ->alignCenter()
                     ->sortable()
                     ->getStateUsing(fn ($record) => (string) $record->prices()->count()),
-                    
+
                 TextColumn::make('features_count')
                     ->label('Características')
                     ->alignCenter()
-                    ->getStateUsing(fn ($record) => (string) $record->product_features()->where('is_active', true)->count()),    
-              
-                ToggleColumn::make('active')
+                    ->getStateUsing(fn ($record) => (string) $record->product_features()->where('is_active', true)->count()),
+
+                ToggleColumn::make('is_active')
                     ->label('Ativo')
                     ->alignCenter(),
 
@@ -118,14 +118,14 @@ class ProductResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                ->action(function (Action $action, $record) {                                     
+                ->action(function (Action $action, $record) {
                     $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
                     $stripe->products->delete($record->stripe_id);
-                   
+
                 }),
             ])
             ->bulkActions([
-               
+
             ]);
     }
 
@@ -145,5 +145,5 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-    
+
 }

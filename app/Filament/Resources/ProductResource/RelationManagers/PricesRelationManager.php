@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\ProductResource\RelationManagers;
 
+use Stripe\Price;
+use Stripe\Stripe;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -36,7 +38,7 @@ class PricesRelationManager extends RelationManager
                 ->required()
                 ->searchable()
                 ->options(ProductCurrencyEnum::class),
-                
+
                 Select::make('interval')
                     ->label('Intervalo de Cobrança')
                     ->options(ProductIntervalEnum::class)
@@ -47,7 +49,15 @@ class PricesRelationManager extends RelationManager
                     ->label('Preço')
                     ->default('100,00')
                     ->required(),
-               
+
+                TextInput::make('trial_period_days')
+                    ->label('Periodo de testes')
+                    ->required()
+                    ->default(0)
+                    ->integer(),
+
+
+
             ]);
     }
 
@@ -72,16 +82,19 @@ class PricesRelationManager extends RelationManager
                     ->badge()
                     ->sortable()
                     ->alignCenter(),
-                
+
                 ToggleColumn::make('is_active')
                     ->label('Ativo para cliente')
-                    ->alignCenter(),    
+                    ->alignCenter(),
 
                 TextColumn::make('unit_amount')
                     ->label('Preço')
                     ->money('BRL')
                     ->sortable(),
-                    
+
+                TextColumn::make('trial_period_days')
+                    ->label('Dias de Teste')
+                    ->alignCenter(),
             ])
             ->filters([
                 //
@@ -94,28 +107,32 @@ class PricesRelationManager extends RelationManager
 
                     // Chamada para a API após criação do item
                     $unitAmount = (int) (str_replace(',', '', $record->unit_amount) * 100);
-                
-                    $stripe = new StripeClient(Env::get('STRIPE_SECRET'));          
-                    $stripePrice = $stripe->prices->create([
-                      'currency' => $record->currency,
+
+                    Stripe::setApiKey(config('services.stripe.secret'));
+
+                    $stripePrice = Price::create([
+                      'currency' => $record->currency->value,
                       'unit_amount' => $unitAmount,
-                      'recurring' => ['interval' => $record->interval],
+                      'recurring' => [
+                            'interval' => $record->interval->value,
+                            'trial_period_days' => $record->trial_period_days,
+                        ],
                       'product' => $product_id,
                     ]);
-                    
+
                     $record->update([
                         'stripe_price_id' => $stripePrice->id,
-                    ]); 
-                    $record->save();                  
+                    ]);
+                    $record->save();
                 }),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-              
+
             ]);
     }
-   
+
 
 }
