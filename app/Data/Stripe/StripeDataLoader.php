@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Stripe;
 
+use App\Enums\Stripe\ProductIntervalEnum;
 use Illuminate\Support\Collection;
 use App\Models\Product;
 use App\Models\Price;
@@ -45,7 +46,8 @@ class StripeDataLoader
                     return [
                         'id' => $price->id,
                         'currency' => $price->currency->value,
-                        'interval' => $price->interval->value,
+                        'interval' => ProductIntervalEnum::from($price->interval->value)->getlabel(),
+                        'interval_description' => ProductIntervalEnum::from($price->interval->value)->getDescription(),
                         'unit_amount' => (int) $price->unit_amount,
                         'stripe_price_id' => $price->stripe_price_id,
                         'is_active' => $price->is_active,

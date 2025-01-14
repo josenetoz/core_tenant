@@ -4,8 +4,9 @@ namespace App\Enums\Stripe;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Contracts\HasDescription;
 
-enum ProductIntervalEnum: string implements HasLabel, HasColor
+enum ProductIntervalEnum: string implements HasLabel, HasColor, HasDescription
 {
     case YEAR = 'year';
     case MONTH = 'month';
@@ -27,6 +28,16 @@ enum ProductIntervalEnum: string implements HasLabel, HasColor
             self::MONTH => 'success',
             self::WEEK => 'success',
             self::DAY => 'success',
+        };
+    }
+
+    public function getDescription(): string
+    {
+        return match ($this) {
+            self::YEAR => 'Ano',
+            self::MONTH => 'Mês',
+            self::WEEK => 'Semana',
+            self::DAY => 'Dia',
         };
     }
 }

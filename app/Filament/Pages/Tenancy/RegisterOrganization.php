@@ -63,7 +63,7 @@ class RegisterOrganization extends RegisterTenant
 
     protected function handleRegistration(array $data): Organization
     {
-        // Configura a chave secreta da API da Stripe
+        // Configura a chave da API da Stripe
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
@@ -79,11 +79,9 @@ class RegisterOrganization extends RegisterTenant
             throw new \Exception('Falha ao criar cliente no Stripe: ' . $e->getMessage());
         }
 
-        // Cria a organização no banco de dados com o ID do Stripe
+        // Inserir o ID do cliente Stripe na tabela de Organization
         $organization = Organization::create(array_merge($data, [
-
             'stripe_id' => $customer->id,
-
         ]));
 
         // Vincula o usuário autenticado como membro da organização

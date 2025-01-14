@@ -41,7 +41,7 @@ class SubscribePlanAction extends Action
                 ->default(array_key_first($this->getBilledPeriods()))
                 ->columnSpanFull()
                 ->badges([
-                    'yearly' => __('Melhor Valor'),
+                    'year' => __('Melhor Valor'),
                 ])
                 ->required(),
         ]);

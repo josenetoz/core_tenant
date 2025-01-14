@@ -9,7 +9,7 @@
 
     <div class="pb-[76px]">
         <h2 class="mb-4 text-base font-semibold text-gray-900 dark:text-white">
-            What you get
+            Seus Benefícios
         </h2>
 
         <div class="space-y-4">
@@ -20,11 +20,12 @@
                     </div>
 
                     <span class="text-sm text-left text-gray-900 dark:text-white">
-                        {{ $feature['name'] }}
+                        {{$feature['description']}}
                     </span>
                 </div>
             @endforeach
         </div>
+        <br>
     </div>
 
     <div class="relative bg-white border-t border-gray-200 rounded-b-xl dark:bg-gray-900 dark:border-gray-800">
@@ -36,9 +37,10 @@
                         <span class="text-3xl font-semibold text-gray-900 dark:text-white">
                             {{ 'R$ ' . number_format($price['interval'] === 'yearly' ? $price['unit_amount'] / 12 : $price['unit_amount'], 2, ',', '.') }}
                         </span>
-                        <span class="text-sm text-gray-500 dark:text-gray-400"> / Mês </span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400"> / </span>
                         <span class="text-sm text-gray-500 dark:text-gray-400">
-                            por {{ $price['interval'] }}
+                            por {{ $price['interval_description'] }}
+
                         </span>
                     </div>
                 @endforeach
