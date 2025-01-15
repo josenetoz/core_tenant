@@ -7,17 +7,20 @@ use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use App\Mail\PasswordResetMail;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Fieldset;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Password;
@@ -129,8 +132,15 @@ class UserRelationManager extends RelationManager
                     Action::make('Resetar Senha')
                     ->requiresConfirmation()
                     ->action(function (User $user) {
-                        $user->password = Hash::make('password'); // Define a nova senha como 'password'
+                        $newPassword = Str::random(8);
+
+                        // Define a nova senha criptografada
+                        $user->password = Hash::make($newPassword);
                         $user->save();
+
+                        // Envia o e-mail com a nova senha
+                        Mail::to($user->email)->send(new PasswordResetMail($newPassword));
+
 
                         Notification::make()
                             ->title('Senha Alterada com Sucesso')
