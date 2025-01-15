@@ -22,23 +22,19 @@ class VerifyBillableIsSubscribed
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $tenant = tenant(Organization::class);
 
+        // Verifica se o usuario é SuperAdmin e libera entrada sem subscription
         $user = $request->user();
         if ($user && $user->is_admin) {
             return $next($request);
         }
 
-        $tenant = tenant(Organization::class);
-
-        $stripeConfig = StripeDataLoader::getProductsData();
-
-        //dd($stripeConfig);
-        foreach ($stripeConfig as $plan) {
-            // Verifica se o tenant está subscrito ao produto
-            if (isset($plan['stripe_id']) && $tenant->subscribedToProduct($plan['stripe_id'])) {
-                return $next($request);
-            }
+        // Verifica se o tenant tem subscription ativa e libera entrada
+        if ($tenant->subscriptions()->active()->exists()) {
+            return $next($request);
         }
+
 
         // Verifica se a ação de assinatura está sendo solicitada
         if ($request->has('action') && $request->get('action') === 'subscribe') {

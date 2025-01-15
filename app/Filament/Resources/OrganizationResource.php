@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use App\Models\Price;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
-
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\Organization;
@@ -16,11 +16,10 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
@@ -59,14 +58,14 @@ class OrganizationResource extends Resource
                             ->maxLength(255),
 
                         Document::make('document_number')
-                            ->label ('Documento da Empresa (CPF ou CNPJ)') 
+                            ->label ('Documento da Empresa (CPF ou CNPJ)')
                             ->validation(false)
                             ->required()
                             ->dynamic(),
-        
+
                         TextInput::make('slug')
                             ->label('URL da Empresa')
-                            ->readonly(),   
+                            ->readonly(),
                     ])->columns(3),
 
                 Fieldset::make('Dados de Validade')
@@ -80,9 +79,9 @@ class OrganizationResource extends Resource
                             ->label('Data de Expiração Teste'),
 
                         DateTimePicker::make('trial_ends_at')
-                            ->label('Valido Até'),    
+                            ->label('Valido Até'),
 
-                    ])->columns(3),  
+                    ])->columns(3),
 
                 Fieldset::make('Dados Sistemicos')
                     ->schema([
@@ -124,11 +123,11 @@ class OrganizationResource extends Resource
                     ->dateTime()
                     ->sortable(),
 
-                TextColumn::make('created_at') 
+                TextColumn::make('created_at')
                     ->label('Criado em')
                     ->dateTime('d/m/Y H:m:s')
                     ->sortable(),
-                         
+
                 TextColumn::make('updated_at')
                     ->label('Atualizado em')
                     ->dateTime()

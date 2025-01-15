@@ -44,7 +44,7 @@ class UserRelationManager extends RelationManager
                             ->label('Nome Usuário')
                             ->required()
                             ->maxLength(255),
-                            
+
                         TextInput::make('email')
                             ->label('E-mail')
                             ->email()
@@ -56,12 +56,12 @@ class UserRelationManager extends RelationManager
                     Fieldset::make('Senha')
                     ->visible(fn ($livewire) => $livewire->mountedTableActionRecord === null)
                     ->schema([
-                                            
-                        Forms\Components\TextInput::make('password')
-                        ->password()
-                        ->label('Senha')
-                         // Exibe apenas ao criar
-                        ->required(fn ($livewire) => $livewire->mountedTableActionRecord === null), // Requerido apenas ao criar
+
+                        TextInput::make('password')
+                            ->password()
+                            ->label('Senha')
+                            // Exibe apenas ao criar
+                            ->required(fn ($livewire) => $livewire->mountedTableActionRecord === null), // Requerido apenas ao criar
 
                     ])->columns(2),
 
@@ -95,7 +95,7 @@ class UserRelationManager extends RelationManager
                     ->alignCenter()
                     ->label('Administrador'),
 
-                TextColumn::make('created_at') 
+                TextColumn::make('created_at')
                     ->label('Criado em')
                     ->dateTime('d/m/Y H:m:s')
                     ->alignCenter()
@@ -112,7 +112,13 @@ class UserRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['email_verified_at'] = now();
+
+                    return $data;
+
+                })
             ])
             ->actions([
 
@@ -131,14 +137,14 @@ class UserRelationManager extends RelationManager
                             ->body('Um Email foi enviado para o usuário com a nova senha')
                             ->success()
                             ->send();
-                      
+
                     })
                     ->color('warning') // Defina a cor, como amarelo para chamar atenção
                     ->icon('heroicon-o-key'), // Ícone da chave
                 ]),
-           
-                    
-                
+
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -146,5 +152,5 @@ class UserRelationManager extends RelationManager
                 ]),
             ]);
     }
- 
+
 }
