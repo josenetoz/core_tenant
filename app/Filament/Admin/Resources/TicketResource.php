@@ -47,12 +47,12 @@ class TicketResource extends Resource
 
 
     public static function getNavigationBadge(): ?string
-{
-    return static::getModel()::whereNotIn('status', [
-        TicketStatusEnum::CLOSED->value,
-        TicketStatusEnum::RESOLVED->value,
-    ])->count();
-}
+    {
+        return static::getModel()::whereNotIn('status', [
+            TicketStatusEnum::CLOSED->value,
+            TicketStatusEnum::RESOLVED->value,
+        ])->count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -190,13 +190,12 @@ class TicketResource extends Resource
                 TextColumn::make('lifetime')
                     ->label('Tempo de Vida')
                     ->getStateUsing(function (Model $record) {
-                            $createdAt = Carbon::parse($record->created_at);
-                            $closedAt = $record->closed_at ? Carbon::parse($record->closed_at) : now();
-                            $diff = $createdAt->diff($closedAt);
+                        $createdAt = Carbon::parse($record->created_at);
+                        $closedAt = $record->closed_at ? Carbon::parse($record->closed_at) : now();
+                        $diff = $createdAt->diff($closedAt);
 
-                            return "{$diff->d} dias, {$diff->h} horas";
-
-                        })
+                        return "{$diff->d} dias, {$diff->h} horas";
+                    })
                     ->alignCenter()
                     ->sortable(),
 

@@ -2,16 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\WebhookEventResource\Pages;
-use App\Filament\Admin\Resources\WebhookEventResource\RelationManagers;
-use App\Models\WebhookEvent;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Livewire\Livewire;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\WebhookEvent;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\WebhookEventResource\Pages;
+use Filament\Support\View\Components\Modal as FilamentModal;
+use App\Filament\Admin\Resources\WebhookEventResource\RelationManagers;
 
 class WebhookEventResource extends Resource
 {
@@ -24,19 +28,28 @@ class WebhookEventResource extends Resource
     protected static ?string $modelLabelPlural = "Webhooks";
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('event_type')
+                    ->label('Tipo de Evento')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('payload')
+                    ->label('Payload')
                     ->required(),
                 Forms\Components\TextInput::make('status')
+                    ->label('Status')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('received_at')
+                    ->label('Recebido em')
                     ->required(),
             ]);
     }
@@ -46,14 +59,19 @@ class WebhookEventResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('event_type')
+                    ->label('Tipo do Evento')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->alignCenter()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('received_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Recebido em')
+                    ->alignCenter()
+                    ->dateTime('d/m/Y H:i:s')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('received_at')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
@@ -65,8 +83,20 @@ class WebhookEventResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\ViewAction::make(),
+                //Tables\Actions\EditAction::make(),
+
+                Action::make('view_payload')
+                ->label('Ver Payload')
+                ->icon('heroicon-o-eye')
+                ->color('primary')
+                ->action(function ($record) {
+                    // Exibir o modal com a view do payload
+                    return view('filament.pages.actions.view-payload', ['payload' => $record->payload]);
+                })
+                ->modalContent(fn($record) => view('filament.pages.actions.view-payload', ['payload' => $record->payload])) // Define o conteúdo do modal
+                ->slideOver(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

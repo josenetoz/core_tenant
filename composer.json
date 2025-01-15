@@ -15,6 +15,7 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "leandrocfe/filament-ptbr-form-fields": "^3.0",
+        "novadaemon/filament-pretty-json": "^2.3",
         "owenvoke/blade-fontawesome": "^2.8",
         "shuvroroy/filament-spatie-laravel-backup": "^2.2",
         "stripe/stripe-php": "^16.4"
