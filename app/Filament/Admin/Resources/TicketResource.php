@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
 use Closure;
 use Carbon\Carbon;
@@ -29,10 +29,10 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Enums\TenantSuport\TicketTypeEnum;
 use App\Enums\TenantSuport\TicketStatusEnum;
 use App\Enums\TenantSuport\TicketPriorityEnum;
-use App\Filament\Resources\TicketResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TicketResource\RelationManagers;
-use App\Filament\Resources\TicketResource\RelationManagers\TicketResponsesRelationManager;
+use App\Filament\Admin\Resources\TicketResource\Pages;
+use App\Filament\Admin\Resources\TicketResource\RelationManagers;
+use App\Filament\Admin\Resources\TicketResource\RelationManagers\TicketResponsesRelationManager;
 
 class TicketResource extends Resource
 {
@@ -167,7 +167,7 @@ class TicketResource extends Resource
 
                 TextColumn::make('title')
                     ->label('Assunto')
-                    ->searchable(),    
+                    ->searchable(),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -185,7 +185,7 @@ class TicketResource extends Resource
                     ->label('Tipo')
                     ->alignCenter()
                     ->badge()
-                    ->sortable(),                
+                    ->sortable(),
 
                 TextColumn::make('lifetime')
                     ->label('Tempo de Vida')
@@ -193,7 +193,7 @@ class TicketResource extends Resource
                             $createdAt = Carbon::parse($record->created_at);
                             $closedAt = $record->closed_at ? Carbon::parse($record->closed_at) : now();
                             $diff = $createdAt->diff($closedAt);
-            
+
                             return "{$diff->d} dias, {$diff->h} horas";
 
                         })
@@ -209,7 +209,7 @@ class TicketResource extends Resource
                 TextColumn::make('closed_at')
                     ->label('Fechado em')
                     ->dateTime()
-                    ->sortable()        
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')

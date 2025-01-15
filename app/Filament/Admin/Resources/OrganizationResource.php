@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
 use Filament\Forms;
-use App\Models\User;
 use Filament\Tables;
-use App\Models\Price;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\Organization;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Actions\EditAction;
@@ -20,15 +20,14 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DateTimePicker;
 use Leandrocfe\FilamentPtbrFormFields\Document;
+use Leandrocfe\FilamentPtbrFormFields\PhoneNumber;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\OrganizationResource\Pages;
-use App\Filament\Resources\OrganizationResource\RelationManagers;
-use App\Filament\Resources\OrganizationResource\RelationManagers\UserRelationManager;
-use App\Filament\Resources\OrganizationResource\RelationManagers\SubscriptionRelationManager;
+use App\Filament\Admin\Resources\OrganizationResource\Pages;
+use App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
+use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\UserRelationManager;
+use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\SubscriptionRelationManager;
 
 class OrganizationResource extends Resource
 {
@@ -41,12 +40,11 @@ class OrganizationResource extends Resource
     protected static ?string $modelLabelPlural = "Tenants";
     protected static ?int $navigationSort = 1;
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Fieldset::make('Label')
+                Fieldset::make('Dados da Empresa')
                     ->schema([
                         TextInput::make('name')
                             ->label('Nome da Empresa')
@@ -58,7 +56,7 @@ class OrganizationResource extends Resource
                             ->maxLength(255),
 
                         Document::make('document_number')
-                            ->label ('Documento da Empresa (CPF ou CNPJ)')
+                            ->label('Documento da Empresa (CPF ou CNPJ)')
                             ->validation(false)
                             ->required()
                             ->dynamic(),
@@ -66,30 +64,53 @@ class OrganizationResource extends Resource
                         TextInput::make('slug')
                             ->label('URL da Empresa')
                             ->readonly(),
-                    ])->columns(3),
 
-                Fieldset::make('Dados de Validade')
-                    ->schema([
                         TextInput::make('stripe_id')
-                            ->label('Id Gateway Pagamento')
+                            ->label('Id Cliente Stripe')
                             ->readOnly()
                             ->maxLength(255),
 
-                        DateTimePicker::make('trial_ends_at')
-                            ->label('Data de Expiração Teste'),
-
-                        DateTimePicker::make('trial_ends_at')
-                            ->label('Valido Até'),
-
                     ])->columns(3),
 
-                Fieldset::make('Dados Sistemicos')
+                Fieldset::make('Dados de Contato')
                     ->schema([
-                        Toggle::make('is_active')
-                            ->label('Tenant Ativo')
-                            ->default(true)
+                        TextInput::make('email')
+                            ->label('E-mail Empresa')
                             ->required(),
-                    ])->columns(1)
+
+                        PhoneNumber::make('phone')
+                            ->label('Telefone da Empresa')
+                            ->required()
+                            ->mask('(99) 99999-9999'),
+
+                    ])->columns(2),
+
+                Fieldset::make('Informações do Cartão')
+                    ->schema([
+                        Grid::make(5)->schema([
+
+                            TextInput::make('pm_type')
+                                ->label('Tipo de Pagamento')
+                                ->readonly(),
+
+                            TextInput::make('pm_last_four')
+                                ->label('Últimos 4 Dígitos')
+                                ->readonly(),
+
+                            TextInput::make('card_exp_month')
+                                ->label('Mês de Expiração')
+                                ->readonly(),
+
+                            TextInput::make('card_exp_year')
+                                ->label('Ano de Expiração')
+                                ->readonly(),
+
+                            TextInput::make('card_country')
+                                ->label('País do Cartão')
+                                ->readonly(),
+                        ]),
+                    ])->columns(1),
+
             ]);
     }
 
@@ -110,17 +131,16 @@ class OrganizationResource extends Resource
                     ->label('Url Tenant')
                     ->searchable(),
 
-                ToggleColumn::make('is_active')
-                    ->alignCenter()
-                    ->label('Tenant Ativo'),
+                TextColumn::make('latest_subscription_trial_ends_at')
+                    ->label('Período de Teste')
+                    ->getStateUsing(fn($record) => $record->subscriptions()->latest('trial_ends_at')->first()?->trial_ends_at)
+                    ->dateTime('d/m/Y H:i:s')
+                    ->sortable(),
 
-                TextColumn::make('stripe_id')
-                    ->label('Id Gateway Pagamento')
-                    ->searchable(),
-
-                TextColumn::make('trial_ends_at')
+                TextColumn::make('latest_subscription_ends_at')
                     ->label('Data de Expiração')
-                    ->dateTime()
+                    ->getStateUsing(fn($record) => $record->subscriptions()->latest('ends_at')->first()?->ends_at)
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable(),
 
                 TextColumn::make('created_at')
@@ -156,6 +176,7 @@ class OrganizationResource extends Resource
         return [
             UserRelationManager::class,
             SubscriptionRelationManager::class,
+
         ];
     }
 
@@ -173,6 +194,5 @@ class OrganizationResource extends Resource
     {
 
         return false;
-
     }
 }

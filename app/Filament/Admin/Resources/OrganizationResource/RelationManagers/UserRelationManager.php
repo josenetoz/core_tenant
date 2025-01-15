@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\OrganizationResource\RelationManagers;
+namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Resources\RelationManagers\RelationManager;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -22,13 +25,6 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Mockery\Generator\StringManipulation\Pass\Pass;
-use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Resources\UserResource\Pages\CreateUser;
-
 
 class UserRelationManager extends RelationManager
 {

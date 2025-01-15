@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\TicketResource\Pages;
+namespace App\Filament\Admin\Resources\TicketResource\Pages;
 
-use App\Filament\Resources\TicketResource;
+use App\Filament\Admin\Resources\TicketResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\TicketResource\Pages;
+namespace App\Filament\Admin\Resources\TicketResource\Pages;
 
 use App\Models\User;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use App\Filament\Resources\TicketResource;
-use Filament\Notifications\Actions\Action;
+use App\Filament\Admin\Resources\TicketResource;
 
 class EditTicket extends EditRecord
 {
@@ -41,4 +41,5 @@ class EditTicket extends EditRecord
             ])
             ->sendToDatabase($user); // Envia a notificação para o usuário relacionado ao ticket
     }
+
 }

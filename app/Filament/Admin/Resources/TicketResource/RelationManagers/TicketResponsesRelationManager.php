@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\TicketResource\RelationManagers;
+namespace App\Filament\Admin\Resources\TicketResource\RelationManagers;
 
+
+use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Table;
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use Faker\Provider\ar_EG\Text;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Fieldset;
@@ -15,11 +17,10 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Resources\RelationManagers\RelationManager;
 
 class TicketResponsesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'ticket_responses';
+    protected static string $relationship = 'TicketResponses';
     protected static ?string $modelLabel = 'Tratativa';
     protected static ?string $modelLabelPlural = "Tratativas";
     protected static ?string $title = 'Tratativa do Ticket';
@@ -43,14 +44,14 @@ class TicketResponsesRelationManager extends RelationManager
                         ->multiple()
                         ->label('Arquivos'),
                 ])->columns(1),
-         
+
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-    
+
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Responsável'),

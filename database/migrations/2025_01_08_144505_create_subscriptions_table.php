@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('stripe_status')->default('incomplete');
             $table->string('stripe_price')->nullable();
             $table->integer('quantity')->nullable();
+            $table->text('hosted_invoice_url')->nullable();
+            $table->text('invoice_pdf')->nullable();
+            $table->timestamp('current_period_start')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->timestamps();
@@ -47,7 +50,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('subscriptions');
         Schema::dropIfExists('subscription_items');
-        
-        
+
+
     }
 };

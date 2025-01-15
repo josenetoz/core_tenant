@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\OrganizationResource\Pages;
+namespace App\Filament\Admin\Resources\OrganizationResource\Pages;
 
+use App\Filament\Admin\Resources\OrganizationResource;
 use Filament\Actions;
-use Stripe\StripeClient;
 use Filament\Resources\Pages\CreateRecord;
-use App\Filament\Resources\OrganizationResource;
 
 class CreateOrganization extends CreateRecord
 {
     protected static string $resource = OrganizationResource::class;
-
-    
 }
-

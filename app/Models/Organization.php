@@ -23,7 +23,7 @@ class Organization extends Model
         'email',
         'phone',
         'slug',
-        'trial_ends_at',
+
     ];
 
 
@@ -45,5 +45,11 @@ class Organization extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
 
 }

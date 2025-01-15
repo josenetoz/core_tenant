@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarFullyCollapsibleOnDesktop()
             ->databaseNotifications()
             ->globalSearch(true)
-          
+
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->userMenuItems([
                 MenuItem::make()
@@ -54,16 +54,16 @@ class AdminPanelProvider extends PanelProvider
                 'Planos',
                 'Administração',
                 'Sistema',
-                
+
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
+            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-              
+
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -86,9 +86,9 @@ class AdminPanelProvider extends PanelProvider
                 FilamentJobsMonitorPlugin::make(),
                 FilamentSpatieLaravelBackupPlugin::make()
                     ->usingPage(Backup::class)
-                    ->usingPolingInterval('10s') // default value is 4s 
+                    ->usingPolingInterval('10s') // default value is 4s
                     ->usingQueue('default') // default value is null
                     ->timeout(120) // default value is 120s
-                ]);    
+                ]);
     }
 }
