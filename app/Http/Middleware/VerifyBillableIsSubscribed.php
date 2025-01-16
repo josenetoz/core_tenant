@@ -10,6 +10,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Filament\Pages\Dashboard;
 use function App\Support\tenant;
+use Illuminate\Support\Facades\Log;
 use App\Data\Stripe\StripeDataLoader;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,10 +32,10 @@ class VerifyBillableIsSubscribed
         }
 
         // Verifica se o tenant tem subscription ativa e libera entrada
-        if ($tenant->subscriptions()->active()->exists()) {
-            return $next($request);
-        }
-
+        $hasValidSubscription = $tenant->subscriptions()->active()->first();
+            if ($hasValidSubscription) {
+                return $next($request);
+            }
 
         // Verifica se a ação de assinatura está sendo solicitada
         if ($request->has('action') && $request->get('action') === 'subscribe') {

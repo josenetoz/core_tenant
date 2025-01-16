@@ -26,6 +26,12 @@ class Subscription extends Model
         'invoice_pdf',
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('ends_at', '>', now()) // Verifica se a assinatura ainda é válida
+                    ->latest('created_at'); // Ordena pela assinatura mais recente
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

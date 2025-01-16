@@ -125,19 +125,19 @@ docker compose exec app bash
 
 ```
 
-7. Inside the container, configure environment variables
-
-```bash
-
-php artisan key:generate
-
-```
-
-8. Inside the container, Install PHP dependencies
+7. Inside the container, Install PHP dependencies
 
 ```bash
 
 composer install
+
+```
+
+78. Inside the container, configure environment variables
+
+```bash
+
+php artisan key:generate
 
 ```
 
