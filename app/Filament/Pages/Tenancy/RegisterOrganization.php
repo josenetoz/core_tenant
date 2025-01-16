@@ -15,8 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\RegisterTenant;
 use Leandrocfe\FilamentPtbrFormFields\Document;
 use Leandrocfe\FilamentPtbrFormFields\PhoneNumber;
-use App\Services\PaymentGateway\Connectors\AsaasConnector;
-
+use App\Services\Stripe\Customer\CreateStripeCustomerService;
 
 class RegisterOrganization extends RegisterTenant
 {
@@ -50,7 +49,7 @@ class RegisterOrganization extends RegisterTenant
                     ->mask('(99) 99999-9999'),
 
                 Document::make('document_number')
-                    ->label ('Documento da Empresa (CPF ou CNPJ)')
+                    ->label('Documento da Empresa (CPF ou CNPJ)')
                     ->validation(false)
                     ->required()
                     ->dynamic(),
@@ -63,23 +62,10 @@ class RegisterOrganization extends RegisterTenant
 
     protected function handleRegistration(array $data): Organization
     {
-        // Configura a chave da API da Stripe
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $createStripeCustomerService = new CreateStripeCustomerService();
 
-        try {
-            // Cria um novo cliente no Stripe
-            $customer = Customer::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-                'description' => 'Cliente registrado no sistema SaaS',
-            ]);
-        } catch (\Exception $e) {
-            // Lida com erros ao criar o cliente no Stripe
-            throw new \Exception('Falha ao criar cliente no Stripe: ' . $e->getMessage());
-        }
+        $customer = $createStripeCustomerService->createCustomer($data);
 
-        // Inserir o ID do cliente Stripe na tabela de Organization
         $organization = Organization::create(array_merge($data, [
             'stripe_id' => $customer->id,
         ]));
@@ -89,6 +75,4 @@ class RegisterOrganization extends RegisterTenant
 
         return $organization;
     }
-
-
 }

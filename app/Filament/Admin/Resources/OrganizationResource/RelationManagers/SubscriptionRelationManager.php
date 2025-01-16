@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use App\Enums\Stripe\SubscriptionStatusEnum;
 use Filament\Resources\RelationManagers\RelationManager;
+use App\Services\Stripe\Subscription\CancelSubscriptionService;
 
 
     class SubscriptionRelationManager extends RelationManager
@@ -76,22 +77,9 @@ use Filament\Resources\RelationManagers\RelationManager;
                     ActionGroup::make([
                     Action::make('Cancelar Assinatura')
                     ->requiresConfirmation()
-                    ->action(function (Action $action, $record) {
-                        try {
-                            $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
-                            $stripe->subscriptions->cancel($record->stripe_id);
-                            Notification::make()
-                                ->title('Assinatura Cancelada')
-                                ->body('Assinatura cancelada com sucesso!')
-                                ->success()
-                                ->send();
-                        } catch (\Exception $e) {
-                            Notification::make()
-                                ->title('Erro ao Cancelar')
-                                ->body('Ocorreu um erro ao cancelar a assinatura. Tente novamente mais tarde.')
-                                ->danger()
-                                ->send();
-                        }
+                    ->action(function (Action $action, $record, array $data) {
+                        $cancellationService = new CancelSubscriptionService();
+                        $cancellationService->cancel($record, $data);
                     })
                     ->color('danger')
                     ->icon('heroicon-o-key'),

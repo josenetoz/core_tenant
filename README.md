@@ -133,7 +133,7 @@ composer install
 
 ```
 
-78. Inside the container, configure environment variables
+8. Inside the container, configure environment variables
 
 ```bash
 
@@ -171,6 +171,12 @@ stripe listen --forward-to http://172.17.0.1/stripe/webhook
 STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 
 ```
+
+## Tips
+
+When a user is registered (new tenant) they are asked to validate their email. use the address below to access the mailpit
+
+http://localhost:8025/
 
 ## Contributing
 

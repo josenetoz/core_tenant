@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
-class ProductFeaturesRelationManager extends RelationManager
+class ProductfeaturesRelationManager extends RelationManager
 {
     protected static string $relationship = 'product_features';
     protected static ?string $modelLabel = 'Caracteristica do Plano';

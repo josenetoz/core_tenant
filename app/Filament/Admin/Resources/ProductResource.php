@@ -21,7 +21,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ProductResource\Pages;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers\PricesRelationManager;
-use App\Filament\Admin\Resources\ProductResource\RelationManagers\ProductFeaturesRelationManager;
+use App\Filament\Admin\Resources\ProductResource\RelationManagers\ProductfeaturesRelationManager;
+
 
 class ProductResource extends Resource
 {
@@ -132,7 +133,7 @@ class ProductResource extends Resource
     {
         return [
             PricesRelationManager::class,
-            ProductFeaturesRelationManager::class,
+            ProductfeaturesRelationManager::class,
         ];
     }
 

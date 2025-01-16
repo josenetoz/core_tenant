@@ -11,12 +11,14 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use App\Enums\Stripe\ProductCurrencyEnum;
 use App\Enums\Stripe\ProductIntervalEnum;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Services\Stripe\Price\CreateStripePriceService;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class PricesRelationManager extends RelationManager
@@ -30,11 +32,11 @@ class PricesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-              Select::make('currency')
-                ->label('Moeda')
-                ->required()
-                ->searchable()
-                ->options(ProductCurrencyEnum::class),
+                Select::make('currency')
+                    ->label('Moeda')
+                    ->required()
+                    ->searchable()
+                    ->options(ProductCurrencyEnum::class),
 
                 Select::make('interval')
                     ->label('Intervalo de Cobrança')
@@ -62,11 +64,11 @@ class PricesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('price')
             ->columns([
-               TextColumn::make('stripe_price_id')
+                TextColumn::make('stripe_price_id')
                     ->label('Id Gateway Pagamento')
                     ->sortable(),
 
-               TextColumn::make('currency')
+                TextColumn::make('currency')
                     ->label('Moeda')
                     ->badge()
                     ->alignCenter()
@@ -96,38 +98,25 @@ class PricesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->after(function ($record) {
-                    // Obtém o produto relacionado
-                    $product_id = $record->product->stripe_id;
+                    ->after(function ($record) {
+                        try {
 
-                    // Chamada para a API após criação do item
-                    $unitAmount = (int) (str_replace(',', '', $record->unit_amount) * 100);
+                            $createStripePriceService = new CreateStripePriceService();
+                            $createStripePriceService->execute($record);
 
-                    Stripe::setApiKey(config('services.stripe.secret'));
+                        } catch (\Exception $e) {
 
-                    $stripePrice = Price::create([
-                      'currency' => $record->currency->value,
-                      'unit_amount' => $unitAmount,
-                      'recurring' => [
-                            'interval' => $record->interval->value,
-                            'trial_period_days' => $record->trial_period_days,
-                        ],
-                      'product' => $product_id,
-                    ]);
-
-                    $record->update([
-                        'stripe_price_id' => $stripePrice->id,
-                    ]);
-                    $record->save();
-                }),
+                            Notification::make()
+                                ->title('Erro ao Criar Preço')
+                                ->body('Ocorreu um erro ao criar o preço no Stripe: ' . $e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
-
-            ]);
+            ->bulkActions([]);
     }
-
-
 }
