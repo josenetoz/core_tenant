@@ -14,11 +14,14 @@ use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\ToggleColumn;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ProductResource\Pages;
+use App\Services\Stripe\Product\DeleteStripeProductService;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers\PricesRelationManager;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers\ProductfeaturesRelationManager;
@@ -119,10 +122,24 @@ class ProductResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                 ->action(function (Action $action, $record) {
-                    $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
-                    $stripe->products->delete($record->stripe_id);
+                    try {
+                        $deleteStripeProductService = new DeleteStripeProductService();
+                        $deleteStripeProductService->execute($record);
 
-                }),
+                        Notification::make()
+                            ->title('Produto Excluído')
+                            ->body('Produto excluído com sucesso!')
+                            ->success()
+                            ->send();
+
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Erro ao Excluir')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                })
             ])
             ->bulkActions([
 
