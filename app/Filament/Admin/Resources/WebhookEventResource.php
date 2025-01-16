@@ -12,7 +12,9 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Support\Enums\MaxWidth;
 
+use Filament\Tables\Actions\ViewAction;
 use Illuminate\Database\Eloquent\Builder;
+use Novadaemon\FilamentPrettyJson\PrettyJson;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\WebhookEventResource\Pages;
 use Filament\Support\View\Components\Modal as FilamentModal;
@@ -38,20 +40,8 @@ class WebhookEventResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('event_type')
-                    ->label('Tipo de Evento')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('payload')
-                    ->label('Payload')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->label('Status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('received_at')
-                    ->label('Recebido em')
-                    ->required(),
+                PrettyJson::make('payload')
+
             ]);
     }
 
@@ -85,7 +75,7 @@ class WebhookEventResource extends Resource
             ])
             ->actions([
                 //Tables\Actions\ViewAction::make(),
-                //Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make()->slideOver(),
 
                 Action::make('view_payload')
                     ->label('Ver Payload')
@@ -125,4 +115,6 @@ class WebhookEventResource extends Resource
             'edit' => Pages\EditWebhookEvent::route('/{record}/edit'),
         ];
     }
+
+
 }
