@@ -15,4 +15,6 @@ class WebhookEvent extends Model
         'status',
         'received_at',
     ];
+
+
 }

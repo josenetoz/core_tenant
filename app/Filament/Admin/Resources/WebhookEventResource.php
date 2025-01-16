@@ -10,8 +10,9 @@ use Filament\Tables\Table;
 use App\Models\WebhookEvent;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Support\Enums\MaxWidth;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\WebhookEventResource\Pages;
 use Filament\Support\View\Components\Modal as FilamentModal;
@@ -87,15 +88,18 @@ class WebhookEventResource extends Resource
                 //Tables\Actions\EditAction::make(),
 
                 Action::make('view_payload')
-                ->label('Ver Payload')
-                ->icon('heroicon-o-eye')
-                ->color('primary')
-                ->action(function ($record) {
-                    // Exibir o modal com a view do payload
-                    return view('filament.pages.actions.view-payload', ['payload' => $record->payload]);
-                })
-                ->modalContent(fn($record) => view('filament.pages.actions.view-payload', ['payload' => $record->payload])) // Define o conteúdo do modal
-                ->slideOver(),
+                    ->label('Ver Payload')
+                    ->icon('heroicon-o-eye')
+                    ->color('primary')
+                        ->action(function ($record) {
+                            // Exibir o modal com a view do payload
+                            return view('filament.pages.actions.view-payload', ['payload' => $record->payload]);
+                        })
+                    ->modalContent(fn($record) => view('filament.pages.actions.view-payload', ['payload' => $record->payload])) // Define o conteúdo do modal
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(false)
+                    ->modalWidth(MaxWidth::FourExtraLarge)
+                    ->slideOver(),
 
             ])
             ->bulkActions([
