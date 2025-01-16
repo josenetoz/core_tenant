@@ -157,11 +157,11 @@ php artisan storage:link
 
 ```
 
-11. Inside the container run the command below (To Listen Webhook stripe events)
+11. Inside the container run the command below (To Listen Webhook stripe events) Ip 172.17.0.1 It is the default gateway for containers to communicate with the host.
 
 ```bash
 
-stripe listen -f http://0.0.0.0/stripe/webhook
+stripe listen --forward-to http://172.17.0.1/stripe/webhook
 
 ```
 

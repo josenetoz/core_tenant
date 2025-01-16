@@ -16,7 +16,7 @@ services:
       - mysql
     networks:
       - tenant
-  
+
   queue:
     build:
       context: .
@@ -81,7 +81,17 @@ services:
       - 1025:1025 # SMTP server
       - 8025:8025 # Web UI
     networks:
-      - tenant  
+      - tenant
+
+  stripe:
+    image: "stripe/stripe-cli:latest"
+    environment:
+        STRIPE_SECRET: ${STRIPE_SECRET}
+        STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME}
+    command:
+        stripe listen --forward-to http://172.17.0.1/stripe/webhook
+    networks:
+      - tenant
 
 volumes:
   mysql-data:
