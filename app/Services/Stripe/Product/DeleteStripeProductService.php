@@ -39,7 +39,7 @@ class DeleteStripeProductService
             $productRecord->delete();
         } catch (Exception $e) {
 
-            Log::error('Erro ao excluir produto na Stripe: ' . $e->getMessage());
+            //Log::error('Erro ao excluir produto na Stripe: ' . $e->getMessage());
 
             throw new Exception('Erro ao excluir o produto: ' . $e->getMessage());
         }

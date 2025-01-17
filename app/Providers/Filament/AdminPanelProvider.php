@@ -84,11 +84,13 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 // ...
                 FilamentJobsMonitorPlugin::make(),
+                /*
                 FilamentSpatieLaravelBackupPlugin::make()
                     ->usingPage(Backup::class)
                     ->usingPolingInterval('10s') // default value is 4s
                     ->usingQueue('default') // default value is null
                     ->timeout(120) // default value is 120s
+                    */
                 ]);
     }
 }

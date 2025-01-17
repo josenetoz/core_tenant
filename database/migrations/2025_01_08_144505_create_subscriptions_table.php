@@ -1,12 +1,12 @@
 <?php
 
 use App\Models\Organization;
+use App\Models\Subscription;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->text('hosted_invoice_url')->nullable();
             $table->text('invoice_pdf')->nullable();
+            $table->text('payment_intent')->nullable();
+            $table->text('charge')->nullable();
             $table->timestamp('current_period_start')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
@@ -32,7 +34,7 @@ return new class extends Migration
 
         Schema::create('subscription_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id');
+            $table->foreignIdFor(Subscription::class);
             $table->string('stripe_id')->unique();
             $table->string('stripe_product');
             $table->string('stripe_price');
@@ -41,6 +43,35 @@ return new class extends Migration
 
             $table->index(['subscription_id', 'stripe_price']);
         });
+
+        Schema::create('subscription_refunds', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId(Organization::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Subscription::class);
+            $table->string('object')->default('refund');
+            $table->string('refund_id')->nullable();
+            $table->string('status')->nullable();
+            $table->string('balance_transaction')->nullable();
+            $table->integer('amount');
+            $table->string('currency');
+            $table->string('reason');
+            $table->timestamps();
+
+            $table->index(['organization_id', 'subscription_id', 'refund_id']);
+        });
+
+        Schema::create('subscription_cancellations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Organization::class)->constrained()->cascadeOnDelete();
+            $table->string('stripe_id')->unique();
+            $table->string('reason')->default('other');
+            $table->text('coments')->nullable();
+            $table->string('rating')->default('other');
+            $table->timestamps();
+
+            $table->index(['organization_id', 'stripe_id', 'reason']);
+        });
+
     }
 
     /**
@@ -50,7 +81,8 @@ return new class extends Migration
     {
         Schema::dropIfExists('subscriptions');
         Schema::dropIfExists('subscription_items');
-
+        Schema::dropIfExists('subscription_refunds');
+        Schema::dropIfExists('subscription_cancellations');
 
     }
 };

@@ -214,7 +214,10 @@ class StripeWebhookController extends Controller
                 $subscription->update([
                     'hosted_invoice_url' => $paymentMethod->hosted_invoice_url,
                     'invoice_pdf' => $paymentMethod->invoice_pdf,
+                    'charge' => $paymentMethod->charge,
+                    'payment_intent' => $paymentMethod->payment_intent,
                 ]);
             }
         }
+
     }

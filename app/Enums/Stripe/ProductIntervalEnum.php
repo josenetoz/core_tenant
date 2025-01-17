@@ -12,6 +12,7 @@ enum ProductIntervalEnum: string implements HasLabel, HasColor, HasDescription
     case MONTH = 'month';
     case WEEK = 'week';
     case DAY = 'day';
+
     public function getLabel(): string
     {
         return match ($this) {

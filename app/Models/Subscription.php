@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Enums\Stripe\SubscriptionStatusEnum;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\Stripe\SubscriptionStatusEnum;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Leandrocfe\FilamentPtbrFormFields\Facades\FilamentPtbrFormFields;
 
 class Subscription extends Model
@@ -24,6 +26,9 @@ class Subscription extends Model
         'ends_at',
         'hosted_invoice_url',
         'invoice_pdf',
+        'charge',
+        'payment_intent',
+
     ];
 
     public function scopeActive($query)
@@ -42,10 +47,20 @@ class Subscription extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function price()
+    public function price(): HasOne
     {
         return $this->hasOne(Price::class, 'stripe_price_id', 'stripe_price');
     }
+
+    public function subscription_refunds(): HasMany
+    {
+        return $this->hasMany(SubscriptionRefund::class);
+    }
+
+
+
+
+
 
 }
 

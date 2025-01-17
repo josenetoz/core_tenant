@@ -25,8 +25,8 @@ class CreateStripeProductService
 
             return $stripeProduct->id;
         } catch (\Exception $e) {
-            Log::error('Erro ao criar produto na Stripe: ' . $e->getMessage());
-            throw new \Exception('Erro ao criar produto na Stripe.');
+            //Log::error('Erro ao criar produto na Stripe: ' . $e->getMessage());
+            throw new \Exception('Erro ao criar produto na Stripe.' . $e->getMessage());
         }
     }
 }

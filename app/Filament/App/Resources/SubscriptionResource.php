@@ -14,6 +14,7 @@ use App\Models\Subscription;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Select;
+use Illuminate\Validation\Rules\Enum;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -25,9 +26,9 @@ use App\Enums\Stripe\CancelSubscriptionEnum;
 use App\Enums\Stripe\SubscriptionStatusEnum;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\App\Resources\SubscriptionResource\Pages;
+use App\Services\Stripe\Subscription\CancelSubscriptionService;
 use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
 use App\Filament\App\Resources\SubscriptionResource\RelationManagers;
-use Illuminate\Validation\Rules\Enum;
 
 class SubscriptionResource extends Resource
 {
@@ -119,10 +120,8 @@ class SubscriptionResource extends Resource
 
                         $totalDays = $days + ($diff->m * 30) + ($diff->y * 365);
 
-                        return sprintf("%d dias e %02d horas", $days, $hours);
+                        return sprintf("%d dias e %02d horas", $totalDays, $hours);
                     }),
-
-
 
             ])
             ->filters([
@@ -170,29 +169,13 @@ class SubscriptionResource extends Resource
                         ->action(function (Action $action, $record, array $data) {
                             try {
 
-                                $stripe = new StripeClient(Env::get('STRIPE_SECRET'));
-                                $stripe->subscriptions->update($record->stripe_id, ['cancel_at_period_end' => true]);
-
-                                // Salvando os dados do cancelamento
-                                SubscriptionCancellation::create([
-                                    'organization_id' => $record->organization_id,
-                                    'stripe_id' => $record->stripe_id,
-                                    'reason' => $data['reason'],
-                                    'coments' => $data['coments'],
-                                    'rating' => $data['rating'],
-                                ]);
-
-                                Notification::make()
-                                    ->title('Assinatura Cancelada')
-                                    ->body('Assinatura cancelada com sucesso!')
-                                    ->success()
-                                    ->send();
-
+                                $cancellationService = new CancelSubscriptionService();
+                                $cancellationService->cancel($record, $data);
                             } catch (\Exception $e) {
 
                                 Notification::make()
-                                    ->title('Erro ao Cancelar')
-                                    ->body('Ocorreu um erro ao cancelar a assinatura. Tente novamente mais tarde.')
+                                    ->title('Erro ao Criar Preço')
+                                    ->body('Ocorreu um erro ao criar o preço no Stripe: ' . $e->getMessage())
                                     ->danger()
                                     ->send();
                             }
@@ -201,15 +184,12 @@ class SubscriptionResource extends Resource
                         ->color('danger')
                         ->icon('heroicon-o-key'),
 
-
-
                     Action::make('Baixar Invoice')
                         ->label('Baixar Invoice')
                         ->icon('heroicon-o-document-arrow-down')
                         ->url(fn($record) => $record->invoice_pdf)
                         ->tooltip('Baixar PDF da Fatura')
                         ->color('primary'),
-
                 ])
             ])
             ->bulkActions([

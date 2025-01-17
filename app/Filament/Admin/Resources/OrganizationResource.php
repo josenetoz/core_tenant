@@ -28,6 +28,7 @@ use App\Filament\Admin\Resources\OrganizationResource\Pages;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\UserRelationManager;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\SubscriptionRelationManager;
+use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\SubscriptionRefundsRelationManager;
 
 class OrganizationResource extends Resource
 {
@@ -167,6 +168,7 @@ class OrganizationResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
                 ]),
             ]);
     }
@@ -176,6 +178,7 @@ class OrganizationResource extends Resource
         return [
             UserRelationManager::class,
             SubscriptionRelationManager::class,
+            SubscriptionRefundsRelationManager::class,
 
         ];
     }

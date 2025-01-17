@@ -51,5 +51,10 @@ class Organization extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    public function subscription_refunds(): HasMany
+    {
+        return $this->hasMany(SubscriptionRefund::class);
+    }
+
 
 }
