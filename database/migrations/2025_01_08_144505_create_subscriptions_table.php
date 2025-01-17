@@ -46,7 +46,7 @@ return new class extends Migration {
 
         Schema::create('subscription_refunds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(Organization::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Organization::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Subscription::class);
             $table->string('object')->default('refund');
             $table->string('refund_id')->nullable();
@@ -57,7 +57,7 @@ return new class extends Migration {
             $table->string('reason');
             $table->timestamps();
 
-            $table->index(['organization_id', 'subscription_id', 'refund_id']);
+            $table->index(['organization_id', 'subscription_id']);
         });
 
         Schema::create('subscription_cancellations', function (Blueprint $table) {
@@ -69,7 +69,7 @@ return new class extends Migration {
             $table->string('rating')->default('other');
             $table->timestamps();
 
-            $table->index(['organization_id', 'stripe_id', 'reason']);
+            $table->index(['organization_id', 'stripe_id']);
         });
 
     }

@@ -14,6 +14,7 @@ class WebhookEvent extends Model
         'payload',
         'status',
         'received_at',
+        'created_at',
     ];
 
 

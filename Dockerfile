@@ -24,7 +24,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Add Node.js repository and install Node.js & NPM
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    npm install -g npm@latest 
+    npm install -g npm@latest
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets intl zip
