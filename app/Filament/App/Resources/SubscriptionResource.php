@@ -13,6 +13,7 @@ use Illuminate\Support\Env;
 use App\Models\Subscription;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Illuminate\Support\Facades\Log;
 use Filament\Forms\Components\Select;
 use Illuminate\Validation\Rules\Enum;
 use Filament\Forms\Components\Fieldset;
@@ -85,8 +86,7 @@ class SubscriptionResource extends Resource
                 TextColumn::make('trial_ends_at')
                     ->label('Fim Período de Teste')
                     ->alignCenter()
-                    ->dateTime('d/m/Y H:m:s')
-                    ->visible(fn($record) => $record && $record->trial_ends_at !== null),
+                    ->dateTime('d/m/Y'),
 
                 TextColumn::make('current_period_start')
                     ->label('Inicio da Cobrança')
@@ -100,28 +100,29 @@ class SubscriptionResource extends Resource
 
                 TextColumn::make('remaining_time')
                     ->label('Tempo Restante')
-                    ->alignCenter()
+
                     ->getStateUsing(function ($record) {
-                        $endsAt = $record->ends_at;
+                        $endsAt = $record->ends_at ? Carbon::parse($record->ends_at) : null;
 
                         if (!$endsAt) {
                             return 'Sem data definida';
                         }
 
                         $now = now();
-                        $diff = $now->diff($endsAt);
 
+                        // Verifica se o plano já expirou
                         if ($now > $endsAt) {
                             return 'Expirado';
                         }
 
-                        $days = $diff->days;
-                        $hours = $diff->h;
+                        // Calcula a diferença total em dias e horas
+                        $remainingDays = $now->diffInDays($endsAt, false);
+                        $remainingHours = $now->diffInHours($endsAt) % 24;
 
-                        $totalDays = $days + ($diff->m * 30) + ($diff->y * 365);
+                        return sprintf('%d dias e %02d horas', $remainingDays, $remainingHours);
+                    })
+                    ->alignCenter(),
 
-                        return sprintf("%d dias e %02d horas", $totalDays, $hours);
-                    }),
 
             ])
             ->filters([

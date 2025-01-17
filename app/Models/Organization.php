@@ -23,7 +23,11 @@ class Organization extends Model
         'email',
         'phone',
         'slug',
-
+        'pm_type',
+        'pm_last_four',
+        'card_exp_month',
+        'card_exp_year',
+        'card_country',
     ];
 
 

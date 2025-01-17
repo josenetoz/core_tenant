@@ -76,8 +76,6 @@ class StripeWebhookController extends Controller
         }
     }
 
-
-
     private function handlePaymentMethodAttached($paymentMethod)
     {
         // Verificar se o payment method está relacionado a um cliente
@@ -85,11 +83,11 @@ class StripeWebhookController extends Controller
 
         if ($organization) {
 
-            $organization->pm_type    = $paymentMethod->card->brand;
+            $organization->pm_type         = $paymentMethod->card->brand;
             $organization->pm_last_four    = $paymentMethod->card->last4;
-            $organization->card_exp_month = $paymentMethod->card->exp_month;
-            $organization->card_exp_year  = $paymentMethod->card->exp_year;
-            $organization->card_country   = $paymentMethod->card->country;
+            $organization->card_exp_month  = $paymentMethod->card->exp_month;
+            $organization->card_exp_year   = $paymentMethod->card->exp_year;
+            $organization->card_country    = $paymentMethod->card->country;
             $organization->save();
         }
     }
@@ -238,6 +236,7 @@ class StripeWebhookController extends Controller
                 'object' => $refundMethod->object,
                 'reference' => $refundMethod->destination_details->card->reference,
                 'reference_status' => $refundMethod->destination_details->card->reference_status,
+                'failure_reason' => $refundMethod->failure_reason,
 
             ]);
         }

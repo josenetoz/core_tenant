@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
 
 use DB;
+use Carbon\Carbon;
 use Stripe\StripeClient;
 use Filament\Tables\Table;
 use Illuminate\Support\Env;
@@ -17,10 +18,10 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use App\Enums\Stripe\ProductCurrencyEnum;
 use App\Enums\Stripe\ProductIntervalEnum;
-use App\Enums\Stripe\Refunds\RefundSubscriptionEnum;
 use App\Enums\Stripe\SubscriptionStatusEnum;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use App\Services\Stripe\Refund\CreateRefundService;
+use App\Enums\Stripe\Refunds\RefundSubscriptionEnum;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Services\Stripe\Subscription\CancelSubscriptionService;
 
@@ -73,6 +74,30 @@ class SubscriptionRelationManager extends RelationManager
                     ->label('Expira em')
                     ->alignCenter()
                     ->dateTime('d/m/Y H:m:s'),
+
+                TextColumn::make('remaining_time')
+                    ->label('Tempo Restante')
+                    ->getStateUsing(function ($record) {
+                        $endsAt = $record->ends_at ? Carbon::parse($record->ends_at) : null;
+
+                        if (!$endsAt) {
+                            return 'Sem data definida';
+                        }
+
+                        $now = now();
+
+                        // Verifica se o plano já expirou
+                        if ($now > $endsAt) {
+                            return 'Expirado';
+                        }
+
+                        // Calcula a diferença total em dias e horas
+                        $remainingDays = $now->diffInDays($endsAt, false);
+                        $remainingHours = $now->diffInHours($endsAt) % 24;
+
+                        return sprintf('%d dias e %02d horas', $remainingDays, $remainingHours);
+                    })
+                    ->alignCenter(),
 
             ])
             ->filters([
@@ -166,24 +191,22 @@ class SubscriptionRelationManager extends RelationManager
 
 
                             try {
-                            //$refundService = new CreateRefundService();
-                            //$refundService->processRefund($record->id, $data);
+                                //$refundService = new CreateRefundService();
+                                //$refundService->processRefund($record->id, $data);
 
-                            Notification::make()
-                            ->title('Reembolso Gerado')
-                            ->body('Reembolso gerado com Sucesso')
-                            ->success()
-                            ->send();
-
+                                Notification::make()
+                                    ->title('Reembolso Gerado')
+                                    ->body('Reembolso gerado com Sucesso')
+                                    ->success()
+                                    ->send();
                             } catch (\Exception $e) {
 
-                            Notification::make()
-                                ->title('Erro ao Criar Preço')
-                                ->body('Ocorreu um erro ao gerar reembolso na Stripe: ' . $e->getMessage())
-                                ->danger()
-                                ->send();
-                        }
-
+                                Notification::make()
+                                    ->title('Erro ao Criar Preço')
+                                    ->body('Ocorreu um erro ao gerar reembolso na Stripe: ' . $e->getMessage())
+                                    ->danger()
+                                    ->send();
+                            }
                         }),
 
                     Action::make('Baixar Invoice')
