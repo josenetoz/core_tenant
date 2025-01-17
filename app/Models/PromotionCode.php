@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\Stripe\PromotionDurationEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PromotionCode extends Model
@@ -23,6 +24,13 @@ class PromotionCode extends Model
       'valid',
       'first_time_transaction',
       'expires_at',
+   ];
+
+   protected $casts = [
+      'active' => 'boolean',
+      'valid' => 'boolean',
+      'first_time_transaction' => 'boolean',
+      'duration' => PromotionDurationEnum::class,
    ];
 
 }
