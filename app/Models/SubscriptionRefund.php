@@ -19,8 +19,13 @@ class SubscriptionRefund extends Model
         'currency',
         'balance_transaction',
         'amount',
-        'reason'
+        'reason',
+        'object',
+        'reference',
+        'reference_status',
     ];
+
+
 
     public function subscription(): BelongsTo
     {

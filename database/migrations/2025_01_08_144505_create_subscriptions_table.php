@@ -52,6 +52,8 @@ return new class extends Migration {
             $table->string('refund_id')->nullable();
             $table->string('status')->nullable();
             $table->string('balance_transaction')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('reference_status')->nullable();
             $table->integer('amount');
             $table->string('currency');
             $table->string('reason');
