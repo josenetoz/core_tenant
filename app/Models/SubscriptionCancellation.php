@@ -21,7 +21,6 @@ class SubscriptionCancellation extends Model
 
     protected $casts = [
         'reason' => CancelSubscriptionEnum::class,
-
     ];
 
 

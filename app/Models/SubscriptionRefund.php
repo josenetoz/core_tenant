@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\Stripe\Refunds\RefundStatusEnum;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\Stripe\Refunds\ReasonRefundStatusEnum;
+use App\Enums\Stripe\Refunds\RefundSubscriptionEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,6 +26,13 @@ class SubscriptionRefund extends Model
         'object',
         'reference',
         'reference_status',
+        'failure_reason',
+    ];
+
+    protected $casts = [
+        'reason' => RefundSubscriptionEnum::class,
+        'status' => RefundStatusEnum::class,
+        'failure_reason' => ReasonRefundStatusEnum::class,
     ];
 
 

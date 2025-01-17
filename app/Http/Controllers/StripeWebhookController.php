@@ -219,8 +219,7 @@ class StripeWebhookController extends Controller
                 'invoice_pdf' => $paymentMethod->invoice_pdf,
                 'charge' => $paymentMethod->charge,
                 'payment_intent' => $paymentMethod->payment_intent,
-                'reference' => $paymentMethod->destination_details->card->reference,
-                'reference_status' => $paymentMethod->destination_details->card->reference_status,
+
             ]);
         }
     }

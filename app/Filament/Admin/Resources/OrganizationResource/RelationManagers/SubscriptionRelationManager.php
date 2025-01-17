@@ -17,7 +17,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use App\Enums\Stripe\ProductCurrencyEnum;
 use App\Enums\Stripe\ProductIntervalEnum;
-use App\Enums\Stripe\RefundSubscriptionEnum;
+use App\Enums\Stripe\Refunds\RefundSubscriptionEnum;
 use App\Enums\Stripe\SubscriptionStatusEnum;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use App\Services\Stripe\Refund\CreateRefundService;
@@ -114,10 +114,21 @@ class SubscriptionRelationManager extends RelationManager
 
                             Fieldset::make('Valores')
                                 ->schema([
+
                                     Money::make('amount')
                                         ->label('Devolver')
                                         ->default('100,00')
-                                        ->required(),
+                                        ->required()
+                                        ->rule(function ($get) {
+
+                                            $stripePrice = $get('stripe_price') ? filter_var($get('stripe_price'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+
+                                            return "lte:{$stripePrice}";
+                                        })
+                                        ->validationAttribute('amount')
+                                        ->validationMessages([
+                                            'lte' => 'O valor não pode ser maior que o valor do plano.',
+                                        ]),
 
                                     Select::make('currency')
                                         ->label('Moeda')
@@ -155,8 +166,8 @@ class SubscriptionRelationManager extends RelationManager
 
 
                             try {
-                            $refundService = new CreateRefundService();
-                            $refundService->processRefund($record->id, $data);
+                            //$refundService = new CreateRefundService();
+                            //$refundService->processRefund($record->id, $data);
 
                             Notification::make()
                             ->title('Reembolso Gerado')

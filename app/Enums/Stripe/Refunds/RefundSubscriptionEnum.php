@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\Stripe;
+namespace App\Enums\Stripe\Refunds;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;

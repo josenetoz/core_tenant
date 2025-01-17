@@ -57,6 +57,7 @@ return new class extends Migration {
             $table->integer('amount');
             $table->string('currency');
             $table->string('reason');
+            $table->text('failure_reason')->nullable();
             $table->timestamps();
 
             $table->index(['organization_id', 'subscription_id']);

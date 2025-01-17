@@ -2,29 +2,23 @@
 
 namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
-use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use App\Enums\Stripe\RefundSubscriptionEnum;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class SubscriptionRefundsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subscription_refunds';
+    protected static ?string $modelLabel = 'Reembolsos';
+    protected static ?string $modelLabelPlural = "Reembolsos";
+    protected static ?string $title = 'Reembolsos da Subscription';
 
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-
-
-
-            ]);
+            ->schema([]);
     }
 
     public function table(Table $table): Table
@@ -32,18 +26,49 @@ class SubscriptionRefundsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('object')
             ->columns([
-                Tables\Columns\TextColumn::make('object'),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->alignCenter()
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('amount')
+                    ->label('Valor')
+                    ->sortable()
+                    ->searchable()
+                    ->alignCenter()
+                    ->formatStateUsing(fn($state) => 'R$ ' . number_format($state / 100, 2, ',', '.')),
+
+                TextColumn::make('reason')
+                    ->label('Motivo')
+                    ->alignCenter()
+                    ->badge()
+                    ->searchable(),
+
+                TextColumn::make('failure_reason')
+                    ->label('Motivo')
+                    ->visible(fn($record) => $record && $record->failure_reason !== null)
+                    ->searchable(),
+
+                TextColumn::make('reference')
+                    ->label('Referência')
+                    ->alignCenter()
+                    ->searchable(),
+
+                TextColumn::make('created_at')
+                    ->label('Criado em')
+                    ->dateTime('d/m/Y H:m:s')
+                    ->alignCenter()
+                    ->searchable(),
+
             ])
             ->filters([
                 //
             ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make(),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
+            ->headerActions([])
+            ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
