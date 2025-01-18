@@ -23,6 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Schedule $schedule) {
 
-        $schedule->job(new CleanWebhookEventsJob)->dailyAt('10:00');
+        $schedule->job(new CleanWebhookEventsJob)->dailyAt('10:03');
 
     })->create();

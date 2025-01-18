@@ -13,6 +13,7 @@ use App\Models\WebhookEvent;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionItem;
 use App\Models\SubscriptionRefund;
+use Stripe\Climate\Order;
 use Stripe\Exception\SignatureVerificationException;
 
 class StripeWebhookController extends Controller
@@ -57,7 +58,9 @@ class StripeWebhookController extends Controller
                 case 'charge.refund.updated':
                     $this->handleSubscriptionRefundUpdated($event->data->object);
                     break;
-
+                case 'checkout.session.expired':
+                    $this->handleCheckoutSessionExpired($event->data->object);
+                    break;
                     // Adicione outros eventos conforme necessário
                 default:
                     break;
@@ -240,5 +243,34 @@ class StripeWebhookController extends Controller
 
             ]);
         }
+    }
+
+    private function handleCheckoutSessionExpired($checkoutSessionMethod)
+    {
+        // Encontrar a subscription pelo ID da assinatura Stripe
+        $organization = Organization::where('stripe_id', $checkoutSessionMethod->customer)->first();
+
+        // Verificar se a organização foi encontrada
+        if (!$organization) {
+            // Se a organização não for encontrada, você pode retornar ou lançar um erro
+            return; // Ou algum tratamento de erro
+        }
+
+        // Obter o organization_id
+        $organizationId = $organization->id;
+
+        // Encontrar a subscription relacionada ao organization_id
+        $subscription = Subscription::where('organization_id', $organizationId)->first();
+
+        // Verificar se a assinatura foi encontrada
+        if (!$subscription) {
+            // Se a assinatura não for encontrada, você pode retornar ou lançar um erro
+            return; // Ou algum tratamento de erro
+        }
+
+        // Atualizar o status da assinatura com o valor de status do webhook
+        $subscription->update([
+            'stripe_status' => $checkoutSessionMethod->status, // Atribuindo o status do webhook
+        ]);
     }
 }

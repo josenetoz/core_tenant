@@ -34,6 +34,7 @@ class Subscription extends Model
     public function scopeActive($query)
     {
         return $query->where('ends_at', '>', now()) // Verifica se a assinatura ainda é válida
+                     //->where('stripe_status', 'active') // Adiciona verificação do status da assinatura
                     ->latest('created_at'); // Ordena pela assinatura mais recente
     }
 

@@ -16,14 +16,13 @@ class CreatePromotionCode extends CreateRecord
         try {
 
             $CreateStripePromotionCodeService = new CreateStripePromotionCodeService();
-
             $CreateStripePromotionCodeService->createPromotionCode($data);
 
             return $data;
 
         } catch (\Exception $e) {
 
-            throw new \Exception('Erro ao salvar produto: ' . $e->getMessage());
+             throw new \Exception('Erro ao criar código promocional: ' . $e->getMessage());
         }
     }
 }
