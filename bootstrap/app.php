@@ -1,6 +1,8 @@
 <?php
 
+use App\Jobs\CleanWebhookEventsJob;
 use Illuminate\Foundation\Application;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -15,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'stripe/*',
         ]);
     })
+
     ->withExceptions(function (Exceptions $exceptions) {
         //
+    })
+    ->withSchedule(function (Schedule $schedule) {
+
+        $schedule->job(new CleanWebhookEventsJob)->dailyAt('10:00');
+
     })->create();

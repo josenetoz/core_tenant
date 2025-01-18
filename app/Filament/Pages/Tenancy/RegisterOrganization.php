@@ -39,24 +39,40 @@ class RegisterOrganization extends RegisterTenant
 
                 TextInput::make('email')
                     ->label('E-mail Principal')
+                    ->unique(Organization::class, 'email', ignoreRecord: true)
                     ->email()
                     ->required()
-                    ->unique(ignoreRecord: true),
+                    ->validationMessages([
+                        'unique' => 'E-mail já cadastrado.',
+                    ]),
+
 
                 PhoneNumber::make('phone')
                     ->label('Celular da Empresa')
+                    ->unique(Organization::class, 'phone', ignoreRecord: true)
                     ->required()
-                    ->mask('(99) 99999-9999'),
+                    ->mask('(99) 99999-9999')
+                    ->validationMessages([
+                        'unique' => 'Telefone ja cadastrado.',
+                    ]),
 
                 Document::make('document_number')
                     ->label('Documento da Empresa (CPF ou CNPJ)')
+                    ->unique(Organization::class, 'document_number', ignoreRecord: true)
                     ->validation(false)
                     ->required()
-                    ->dynamic(),
+                    ->dynamic()
+                    ->validationMessages([
+                        'unique' => 'Documento já cadastrado.',
+                    ]),
 
                 TextInput::make('slug')
                     ->label('Essa será a URL da sua empresa')
-                    ->readonly(),
+                    ->unique(Organization::class, 'slug', ignoreRecord: true)
+                    ->readonly()
+                    ->validationMessages([
+                        'unique' => 'Url em Uso, altere nome da empresa',
+                    ]),
             ]);
     }
 
