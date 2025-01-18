@@ -27,6 +27,7 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
             self::UNPAID => 'Cartão Inválido',
             self::CANCELED => 'Cancelado',
             self::PAUSED => 'Pausado',
+
         };
     }
 
@@ -41,6 +42,7 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
             self::UNPAID => 'danger',
             self::CANCELED => 'danger',
             self::PAUSED => 'warning',
+
         };
     }
 }

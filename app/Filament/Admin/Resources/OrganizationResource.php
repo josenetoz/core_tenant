@@ -2,30 +2,28 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
+use App\Models\Price;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\Organization;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ActionGroup;
+use App\Enums\Stripe\ProductIntervalEnum;
 use Filament\Tables\Actions\DeleteAction;
-use Illuminate\Database\Eloquent\Builder;
+use App\Enums\Stripe\SubscriptionStatusEnum;
 use Leandrocfe\FilamentPtbrFormFields\Document;
 use Leandrocfe\FilamentPtbrFormFields\PhoneNumber;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\OrganizationResource\Pages;
-use App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
+use App\Filament\Admin\Resources\OrganizationResource\Widgets\RevenueWidget;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\UserRelationManager;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\SubscriptionRelationManager;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\SubscriptionRefundsRelationManager;
@@ -41,6 +39,11 @@ class OrganizationResource extends Resource
     protected static ?string $modelLabelPlural = "Tenants";
     protected static ?int $navigationSort = 1;
 
+    public function getHeaderWidgetsColumns(): int
+{
+    return 3;  // Definindo 3 colunas para os widgets
+}
+
     public static function form(Form $form): Form
     {
         return $form
@@ -50,17 +53,25 @@ class OrganizationResource extends Resource
                         TextInput::make('name')
                             ->label('Nome da Empresa')
                             ->required()
+                            ->unique(ignoreRecord: true)
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (Set $set, $state) {
                                 $set('slug', Str::slug($state));
                             })
+                            ->validationMessages([
+                                'unique' => 'Empresa ja cadastrada.',
+                            ])
                             ->maxLength(255),
 
                         Document::make('document_number')
                             ->label('Documento da Empresa (CPF ou CNPJ)')
                             ->validation(false)
+                            ->unique(ignoreRecord: true)
                             ->required()
-                            ->dynamic(),
+                            ->dynamic()
+                            ->validationMessages([
+                                'unique' => 'Documento já cadastrado.',
+                            ]),
 
                         TextInput::make('slug')
                             ->label('URL da Empresa')
@@ -77,12 +88,20 @@ class OrganizationResource extends Resource
                     ->schema([
                         TextInput::make('email')
                             ->label('E-mail Empresa')
-                            ->required(),
+                            ->unique(ignoreRecord: true)
+                            ->required()
+                            ->validationMessages([
+                                'unique' => 'E-mail já cadastrado.',
+                            ]),
 
                         PhoneNumber::make('phone')
                             ->label('Telefone da Empresa')
+                            ->unique(ignoreRecord: true)
                             ->required()
-                            ->mask('(99) 99999-9999'),
+                            ->mask('(99) 99999-9999')
+                            ->validationMessages([
+                                'unique' => 'Telefone já cadastrado.',
+                            ]),
 
                     ])->columns(2),
 
@@ -111,7 +130,6 @@ class OrganizationResource extends Resource
                                 ->readonly(),
                         ]),
                     ])->columns(1),
-
             ]);
     }
 
@@ -120,33 +138,113 @@ class OrganizationResource extends Resource
         return $table
             ->columns([
 
+                TextColumn::make('latest_subscription_stripe_status')
+                    ->label('Status Subscription')
+                    ->getStateUsing(fn($record) => $record->subscriptions()->latest('stripe_status')->first()?->stripe_status)
+                    ->getStateUsing(function ($record) {
+                        $status = $record->subscriptions()->latest('stripe_status')->first()?->stripe_status;
+                        return $status ?? 'Admin Tenant';
+                    })
+                    ->formatStateUsing(function ($state) {
+                        return $state === 'Admin Tenant' ? $state : SubscriptionStatusEnum::from($state)->getLabel();
+                    })
+                    ->color(function ($state) {
+                        return $state === 'Admin Tenant' ? 'info' : SubscriptionStatusEnum::from($state)->getColor();
+                    })
+                    ->badge(),
+
                 TextColumn::make('name')
                     ->label('Cliente')
-                    ->searchable(),
-
-                TextColumn::make('document_number')
-                    ->label('Documento')
                     ->searchable(),
 
                 TextColumn::make('slug')
                     ->label('Url Tenant')
                     ->searchable(),
 
+                TextColumn::make('planperiod')
+                    ->label('Plano Contratado')
+                    ->getStateUsing(function ($record) {
+                        $subscription = $record->subscriptions()->latest()->first();
+                        if ($subscription) {
+                            $stripePrice = $subscription->stripe_price;
+                            $price = Price::where('stripe_price_id', $stripePrice)->latest()->first();
+                            return  $price->interval ?? 'N/A';
+                        }
+                        return 'N/A';
+                    })
+                    ->formatStateUsing(function ($state) {
+                        if ($state === 'N/A') {
+                            return $state;
+                        }
+                        if ($state instanceof ProductIntervalEnum) {
+                            return $state->getLabel();
+                        }
+                        return ProductIntervalEnum::tryFrom($state)?->getLabel() ?? 'Desconhecido';
+                    })
+                    ->color(function ($state) {
+                        if ($state === 'N/A') {
+                            return 'info';
+                        }
+                        if ($state instanceof ProductIntervalEnum) {
+                            return $state->getColor();
+                        }
+                        return ProductIntervalEnum::tryFrom($state)?->getColor() ?? 'secondary';
+                    })
+                    ->badge()
+                    ->alignCenter(),
+
+                TextColumn::make('planvalue')
+                    ->label('Valor do Plano')
+                    ->getStateUsing(function ($record) {
+                        $subscription = $record->subscriptions()->latest()->first();
+                        if ($subscription) {
+                            $stripePrice = $subscription->stripe_price;
+                            $price = Price::where('stripe_price_id', $stripePrice)->latest()->first();
+                            return $price ? $price->unit_amount : 'Preço não encontrado';
+                        }
+                        return 'N/A';
+                    })
+                    ->money('brl')
+                    ->alignCenter(),
+
                 TextColumn::make('latest_subscription_trial_ends_at')
                     ->label('Período de Teste')
-                    ->getStateUsing(fn($record) => $record->subscriptions()->latest('trial_ends_at')->first()?->trial_ends_at)
-                    ->dateTime('d/m/Y H:i:s')
-                    ->sortable(),
+                    ->getStateUsing(function ($record) {
+                        $trialEndsAt = $record->subscriptions()->latest('trial_ends_at')->first()?->trial_ends_at;
+
+                        if (is_null($trialEndsAt)) {
+                            return 'N/A';
+                        }
+                        return now()->greaterThan($trialEndsAt) ? 'Período expirado' : $trialEndsAt;
+                    })
+                    ->formatStateUsing(function ($state) {
+                        if ($state === 'N/A' || $state === 'Período expirado') {
+                            return $state;
+                        }
+                        return \Carbon\Carbon::parse($state)->format('d/m/Y');
+                    })
+                    ->alignCenter(),
 
                 TextColumn::make('latest_subscription_ends_at')
-                    ->label('Data de Expiração')
-                    ->getStateUsing(fn($record) => $record->subscriptions()->latest('ends_at')->first()?->ends_at)
-                    ->dateTime('d/m/Y H:i:s')
-                    ->sortable(),
+                    ->label('Expira Em')
+                    ->getStateUsing(function ($record) {
+                        $endsAt = $record->subscriptions()->latest('ends_at')->first()?->ends_at;
+
+                        if ($endsAt) {
+                            $remainingDays = now()->diffInDays($endsAt, false);
+
+                            if ($remainingDays < 0) {
+                                return 'Expirado';
+                            }
+                            return sprintf('%d dias', $remainingDays);
+                        }
+
+                        return 'Não Expira';
+                    }),
 
                 TextColumn::make('created_at')
                     ->label('Criado em')
-                    ->dateTime('d/m/Y H:m:s')
+                    ->dateTime('d/m/Y')
                     ->sortable(),
 
                 TextColumn::make('updated_at')

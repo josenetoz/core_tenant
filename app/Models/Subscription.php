@@ -58,11 +58,6 @@ class Subscription extends Model
         return $this->hasMany(SubscriptionRefund::class);
     }
 
-
-
-
-
-
 }
 
 
