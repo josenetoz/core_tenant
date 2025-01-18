@@ -5,10 +5,8 @@ namespace App\Filament\Admin\Resources\OrganizationResource\Pages;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Admin\Resources\OrganizationResource;
-use App\Filament\Admin\Resources\OrganizationResource\Widgets\RevenueWidget;
-use App\Filament\Admin\Resources\OrganizationResource\Widgets\TotalTenantsWidget;
-use App\Filament\Admin\Resources\OrganizationResource\Widgets\ActiveTenantsWidget;
-use App\Filament\Admin\Resources\OrganizationResource\Widgets\StatsTenantOverviewWidget;
+use App\Filament\Admin\Resources\OrganizationResource\Widgets\StatsTenantOverview;
+
 
 class ListOrganizations extends ListRecords
 {
@@ -18,7 +16,7 @@ class ListOrganizations extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            StatsTenantOverviewWidget::class,
+            StatsTenantOverview::class,
 
         ];
     }
