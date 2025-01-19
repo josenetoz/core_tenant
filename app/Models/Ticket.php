@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Ticket extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
                 'organization_id',
                 'user_id',
-                'title', 
-                'description', 
+                'title',
+                'description',
                 'file',
-                'image_path', 
+                'image_path',
                 'priority',
                 'status',
                 'type',
@@ -38,9 +38,9 @@ class Ticket extends Model
         'status' => TicketStatusEnum::class,
         'file' => 'array',
         'created_at' => 'datetime',
-        'closed_at' => 'datetime', 
-      
-        
+        'closed_at' => 'datetime',
+
+
     ];
 
     public function organization(): BelongsTo
@@ -53,7 +53,7 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ticket_responses(): HasMany
+    public function ticketresponses(): HasMany
     {
         return $this->hasMany(TicketResponse::class);
     }
