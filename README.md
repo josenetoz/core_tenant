@@ -18,15 +18,16 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 ## Videos:
 
-1 - Administrative panel presentation
+1 - See Video - Administrative panel presentation
 
-[![Watch the video]](https://youtu.be/mjXOp9EMKj4)
+[![Watch the video](https://i9.ytimg.com/vi/mjXOp9EMKj4/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGDsgTih_MA8=&rs=AOn4CLALzepT-_J4vfunjfSgNgETG4oPCA)](https://youtu.be/mjXOp9EMKj4)
 
-2 - Creation of Products, prices and Features
+2 - See Video - Creation of Products, prices and Features
 
-https://youtu.be/52wDWiFtNxw
+[![Watch the video](https://i9.ytimg.com/vi/52wDWiFtNxw/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGF0gXShdMA8=&rs=AOn4CLAvZkesp1BSRpGhIzyFrDA3iWy8OQ)](https://youtu.be/52wDWiFtNxw)
 
-3 - Registering a new tenant
+3 - See Video - Registering a new tenant
+
 [![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/sddefault.jpg?sqp=CLiyubwG-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLAHAQ-bI-I19qZI-dGCyCWJpdDBEw)](https://youtu.be/LJdqvMkynlU)
 
 ## The plugins used in this project may include:
