@@ -55,7 +55,7 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 ```bash
 
-git https://github.com/wallacemartinss/core_tenant.git
+git clone https://github.com/wallacemartinss/core_tenant.git
 cd core_tenant
 
 ```
