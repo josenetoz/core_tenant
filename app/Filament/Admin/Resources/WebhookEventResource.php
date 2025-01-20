@@ -41,7 +41,6 @@ class WebhookEventResource extends Resource
         return $form
             ->schema([
                 PrettyJson::make('payload')
-
             ]);
     }
 
@@ -115,6 +114,8 @@ class WebhookEventResource extends Resource
             'edit' => Pages\EditWebhookEvent::route('/{record}/edit'),
         ];
     }
-
-
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 }

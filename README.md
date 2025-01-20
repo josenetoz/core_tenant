@@ -20,6 +20,8 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 1 - Administrative panel presentation
 
+[![Watch the video]](https://youtu.be/mjXOp9EMKj4)
+
 2 - Creation of Products, prices and Features
 
 3 - Registering a new tenant
