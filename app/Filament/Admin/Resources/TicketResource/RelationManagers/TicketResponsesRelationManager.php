@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TicketResponsesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'TicketResponses';
+    protected static string $relationship = 'ticketresponses';
     protected static ?string $modelLabel = 'Tratativa';
     protected static ?string $modelLabelPlural = "Tratativas";
     protected static ?string $title = 'Tratativa do Ticket';

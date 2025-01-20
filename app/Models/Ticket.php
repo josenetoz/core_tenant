@@ -53,8 +53,8 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ticketresponses(): HasMany
+    public function ticketresponses()
     {
-        return $this->hasMany(TicketResponse::class);
+        return $this->hasMany(TicketResponse::class, 'ticket_id');
     }
 }

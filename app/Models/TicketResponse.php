@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class TicketResponse extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'ticket_id',
         'user_id',
@@ -35,17 +35,16 @@ class TicketResponse extends Model
                 $model->user_id = Auth::id();
         });
     }
-    
-    public function ticket(): BelongsTo
-    {
-        return $this->belongsTo(Ticket::class);
-    }
 
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, 'ticket_id');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-  
+
 
 }

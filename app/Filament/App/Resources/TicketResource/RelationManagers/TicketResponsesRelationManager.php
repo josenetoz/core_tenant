@@ -16,7 +16,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 
 class TicketResponsesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'ticket_responses';
+    protected static string $relationship = 'ticketresponses';
     protected static ?string $modelLabel = 'Tratativa';
     protected static ?string $modelLabelPlural = "Tratativas";
     protected static ?string $title = 'Tratativa do Ticket';
@@ -45,7 +45,7 @@ class TicketResponsesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-         
+
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Responsável'),
@@ -65,14 +65,14 @@ class TicketResponsesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-              
+
             ])
             ->bulkActions([
-               
+
             ]);
     }
 }
