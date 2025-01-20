@@ -42,6 +42,7 @@ class RegisterOrganization extends RegisterTenant
                     ->unique(Organization::class, 'email', ignoreRecord: true)
                     ->email()
                     ->required()
+                    ->prefixIcon('fas-envelope')
                     ->validationMessages([
                         'unique' => 'E-mail já cadastrado.',
                     ]),
@@ -52,6 +53,7 @@ class RegisterOrganization extends RegisterTenant
                     ->unique(Organization::class, 'phone', ignoreRecord: true)
                     ->required()
                     ->mask('(99) 99999-9999')
+                    ->prefixIcon('fas-phone')
                     ->validationMessages([
                         'unique' => 'Telefone ja cadastrado.',
                     ]),
@@ -62,6 +64,7 @@ class RegisterOrganization extends RegisterTenant
                     ->validation(false)
                     ->required()
                     ->dynamic()
+                    ->prefixIcon('fas-id-card')
                     ->validationMessages([
                         'unique' => 'Documento já cadastrado.',
                     ]),
@@ -70,6 +73,7 @@ class RegisterOrganization extends RegisterTenant
                     ->label('Essa será a URL da sua empresa')
                     ->unique(Organization::class, 'slug', ignoreRecord: true)
                     ->readonly()
+                    ->prefixIcon('fas-globe')
                     ->validationMessages([
                         'unique' => 'Url em Uso, altere nome da empresa',
                     ]),

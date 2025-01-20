@@ -42,7 +42,7 @@ class StatsTicketsOverview extends BaseWidget
                         ->value('avg_resolution_time');
 
                     // Se o valor for menor que 0 ou nulo, retorna 0 horas
-                    return ($averageTime > 0 ? $averageTime : 0) . ' horas';
+                    return number_format(max($averageTime, 0), 2, ',', '.') . ' horas';
                 })
                 ->description('tempo')
                 ->color('warning')

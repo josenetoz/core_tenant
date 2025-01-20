@@ -143,6 +143,7 @@ class SubscribePlanAction extends Action
 
     // Cria a sessão de checkout
     $checkoutSession = Session::create([
+
         'payment_method_types' => ['card'],
 
         'mode' => 'subscription',
@@ -159,7 +160,6 @@ class SubscribePlanAction extends Action
     ]);
 
     // Redireciona para a URL de checkout
-    //redirect()->away($checkoutSession->url)->send();
     redirect()->away($checkoutSession->url);
 }
 

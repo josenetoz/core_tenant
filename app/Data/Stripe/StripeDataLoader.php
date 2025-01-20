@@ -13,8 +13,6 @@ use App\Models\ProductFeature;
 class StripeDataLoader
 {
     /**
-     * Retorna uma coleção de produtos com suas features e preços
-     *
      * @return Collection
      */
     public static function getProductsData(): Collection
