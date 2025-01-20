@@ -16,6 +16,14 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 6 - Profile editing with theme color customization.
 7 - Integration of Icons with FontAwesome.
 
+## Videos:
+
+1 - Administrative panel presentation
+
+2 - Creation of Products, prices and Features
+
+3 - Registering a new tenant
+
 ## The plugins used in this project may include:
 
 -   [laravel](https://github.com/laravel/framework)
@@ -33,40 +41,7 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 ## Dockerfile includes the following functionalities:
 
-1. Base Image: Uses php:8.3-fpm as the base image.
-
-2. User Setup: Defines a user with a specified UID and creates a home directory.
-
-3. System Dependencies: Installs essential packages such as:
-
-    - git,
-    - curl,
-    - libpng-dev,
-    - libzip-dev,
-    - and others required for running the project.
-
-4. Node.js & NPM: Adds the Node.js repository and installs Node.js and the latest version of NPM.
-
-5. PHP Extensions, all necessary PHP extensions:
-
-    - pdo_mysql,
-    - mbstring,
-    - gd,
-    - intl,
-    - zip,
-    - etc.
-
-6. Composer: Copies the latest Composer binary into the container to manage PHP dependencies.
-
-7. Redis: Installs Redis and enables the extension.
-
-8. Stripe CLI: Installs the Stripe CLI for Stripe-related operations (To Listen Webhook stripe events)
-
-9. PHPStan: Installs PHPStan globally for static analysis.
-
-10. Working Directory: Sets the working directory to /var/www.
-
-11. User Switching: Switches to a non-root user to run Composer and Artisan commands securely.
+1. The Docker File include all resources for execute this project.
 
 ## Installation
 
@@ -94,7 +69,7 @@ cp .env.example .env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=billing_system
+DB_DATABASE=db_coretenant_system
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 
@@ -106,6 +81,7 @@ DB_PASSWORD=your_password
 
 STRIPE_KEY=your_stripe_key
 STRIPE_SECRET=your_stripe_secret
+
 
 ```
 
