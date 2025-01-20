@@ -24,7 +24,10 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 2 - Creation of Products, prices and Features
 
+https://youtu.be/52wDWiFtNxw
+
 3 - Registering a new tenant
+[![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/sddefault.jpg?sqp=CLiyubwG-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLAHAQ-bI-I19qZI-dGCyCWJpdDBEw)](https://youtu.be/LJdqvMkynlU)
 
 ## The plugins used in this project may include:
 
