@@ -28,7 +28,7 @@ An example project demonstrating a MultiTenant SingleDatabase system fully built
 
 3 - See Video - Registering a new tenant
 
-[![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/sddefault.jpg?sqp=CLiyubwG-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLAHAQ-bI-I19qZI-dGCyCWJpdDBEw)](https://youtu.be/LJdqvMkynlU)
+[![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/mqdefault.jpg?sqp=CLiyubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLBuDdS8OJrdML6h2UhjgkLGcdYKoA)](https://youtu.be/LJdqvMkynlU)
 
 ## The plugins used in this project may include:
 
