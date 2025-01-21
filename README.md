@@ -20,15 +20,15 @@ An example project demonstrating a MultiTenant <b>Single Database</b> system ful
 
 1. See Video - Administrative panel presentation
 
-<video>https://youtu.be/mjXOp9EMKj4</video>
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/mjXOp9EMKj4" title="Filament Tenant - Administrative panel presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 2. See Video - Creation of Products, prices and Features
 
-<video>https://youtu.be/52wDWiFtNxw</video>
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/52wDWiFtNxw" title="Filament Tenant - Products, prices and Features" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 3. See Video - Registering a new tenant
 
-<video>https://youtu.be/LJdqvMkynlU</video>
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/LJdqvMkynlU" title="Filament Tenant - Registering a new tenant" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## The plugins used in this project may include:
 
