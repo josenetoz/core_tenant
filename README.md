@@ -1,6 +1,6 @@
 <p align="center">
     <h2 align="center"> 
-        FilamentPHP Tenant Based in Organization/Company (Single Database)
+        FilamentPHP Tenant Based in Organization/Company (<b>Single Database</b>)
     </h2>
 </p>
 
@@ -20,15 +20,17 @@ An example project demonstrating a MultiTenant <b>Single Database</b> system ful
 
 1. See Video - Administrative panel presentation
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/mjXOp9EMKj4" title="Filament Tenant - Administrative panel presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<video>https://youtu.be/mjXOp9EMKj4</video>
+
+[![Watch the video](https://i9.ytimg.com/vi/mjXOp9EMKj4/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGDsgTih_MA8=&rs=AOn4CLALzepT-_J4vfunjfSgNgETG4oPCA)]()
 
 2. See Video - Creation of Products, prices and Features
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/52wDWiFtNxw" title="Filament Tenant - Products, prices and Features" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Watch the video](https://i9.ytimg.com/vi/52wDWiFtNxw/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGF0gXShdMA8=&rs=AOn4CLAvZkesp1BSRpGhIzyFrDA3iWy8OQ)](https://youtu.be/52wDWiFtNxw)
 
 3. See Video - Registering a new tenant
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/LJdqvMkynlU" title="Filament Tenant - Registering a new tenant" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/mqdefault.jpg?sqp=CLiyubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLBuDdS8OJrdML6h2UhjgkLGcdYKoA)](https://youtu.be/LJdqvMkynlU)
 
 ## The plugins used in this project may include:
 
