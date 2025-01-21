@@ -1,34 +1,34 @@
 <p align="center">
     <h2 align="center"> 
-        FilamentPHP Tenant Based in Organization/Company
+        FilamentPHP Tenant Based in Organization/Company (Single Database)
     </h2>
 </p>
 
 ## About this Project
 
-An example project demonstrating a MultiTenant SingleDatabase system fully built in Laravel and Filament, integrated with Stripe for Subscription management. The system includes the following features:
+An example project demonstrating a MultiTenant <b>Single Database</b> system fully built in Laravel and Filament, integrated with Stripe for Subscription management. The system includes the following features:
 
-1 - Creation of Plans, Prices, and Features stored in the database and integrated via the Stripe API.
-2 - Admin Panel for Managing Tenants and Subscriptions.
-3 - API-based Client Creation when registering the Tenant
-4 - Modal for Tenant to choose Plans and Complete the Subscription (Stripe Management)
-5 - Feature for Tenant to create tickets for the Tenant's manager.
-6 - Profile editing with theme color customization.
-7 - Integration of Icons with FontAwesome.
+1. Creation of Plans, Prices, and Features stored in the database and integrated via the Stripe API.
+2. Admin Panel for Managing Tenants and Subscriptions.
+3. API-based Client Creation when registering the Tenant
+4. Modal for Tenant to choose Plans and Complete the Subscription (Stripe Management)
+5. Feature for Tenant to create tickets for the Tenant's manager.
+6. Profile editing with theme color customization.
+7. Integration of Icons with FontAwesome.
 
 ## Videos:
 
-1 - See Video - Administrative panel presentation
+1. See Video - Administrative panel presentation
 
-[![Watch the video](https://i9.ytimg.com/vi/mjXOp9EMKj4/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGDsgTih_MA8=&rs=AOn4CLALzepT-_J4vfunjfSgNgETG4oPCA)](https://youtu.be/mjXOp9EMKj4)
+<video>https://youtu.be/mjXOp9EMKj4</video>
 
-2 - See Video - Creation of Products, prices and Features
+2. See Video - Creation of Products, prices and Features
 
-[![Watch the video](https://i9.ytimg.com/vi/52wDWiFtNxw/mqdefault.jpg?sqp=COS0ubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGF0gXShdMA8=&rs=AOn4CLAvZkesp1BSRpGhIzyFrDA3iWy8OQ)](https://youtu.be/52wDWiFtNxw)
+<video>https://youtu.be/52wDWiFtNxw</video>
 
-3 - See Video - Registering a new tenant
+3. See Video - Registering a new tenant
 
-[![Watch the video](https://i9.ytimg.com/vi/LJdqvMkynlU/mqdefault.jpg?sqp=CLiyubwG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEEgTyhyMA8=&rs=AOn4CLBuDdS8OJrdML6h2UhjgkLGcdYKoA)](https://youtu.be/LJdqvMkynlU)
+<video>https://youtu.be/LJdqvMkynlU</video>
 
 ## The plugins used in this project may include:
 
