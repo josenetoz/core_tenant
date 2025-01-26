@@ -6,9 +6,9 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
-use App\Filament\Pages\Backup\Backup; // Ensure this class exists in the specified namespace
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use App\Http\Middleware\VerifyIsAdmin;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
@@ -22,6 +22,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Croustibat\FilamentJobsMonitor\FilamentJobsMonitorPlugin;
 use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
+use App\Filament\Pages\Backup\Backup; // Ensure this class exists in the specified namespace
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,10 +31,10 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->globalSearch(true)
-
+            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->userMenuItems([
                 MenuItem::make()

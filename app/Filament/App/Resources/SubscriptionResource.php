@@ -40,7 +40,7 @@ class SubscriptionResource extends Resource
     protected static ?string $navigationLabel = 'Minhas Assinaturas';
     protected static ?string $modelLabel = 'Minha Assinatura';
     protected static ?string $modelLabelPlural = "Minhas Assinaturas";
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
     protected static bool $isScopedToTenant = true;
 
 

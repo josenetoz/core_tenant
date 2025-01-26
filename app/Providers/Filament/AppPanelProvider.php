@@ -2,31 +2,32 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Billing\BillingProvider;
-use App\Filament\Pages\Auth\Register;
-use App\Filament\Pages\Dashboard;
-use App\Filament\Pages\Tenancy\RegisterOrganization;
-use App\Http\Middleware\FilamentSettings;
+use Filament\Panel;
+use Filament\Widgets;
+use Filament\PanelProvider;
 use App\Models\Organization;
+use App\Filament\Pages\Dashboard;
+use Filament\Navigation\MenuItem;
+use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
+use Illuminate\Support\Facades\Auth;
+use App\Filament\Pages\Auth\Register;
+use App\Filament\Billing\BillingProvider;
+use App\Http\Middleware\FilamentSettings;
 use Filament\Http\Middleware\Authenticate;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
+use App\Filament\Pages\Tenancy\RegisterOrganization;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
-use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
-use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
-use Filament\Widgets;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -40,9 +41,10 @@ class AppPanelProvider extends PanelProvider
             ->passwordReset()
             ->registration(Register::class)
             ->emailVerification()
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->breadcrumbs()
             ->databaseNotifications()
+            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->emailVerification(EmailVerificationPrompt::class)
             ->userMenuItems([
                 'profile' => MenuItem::make()

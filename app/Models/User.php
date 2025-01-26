@@ -30,7 +30,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         'name',
         'avatar_url',
         'settings',
-        'is_admin',
+        'is_tenant_admin',
         'email',
         'phone',
         'password',
@@ -59,6 +59,8 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'settings' => 'array',
+            'is_active' => 'boolean',
+            'is_tenant_admin' => 'boolean',
         ];
     }
 /**
@@ -70,7 +72,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
      {
          return $this->belongsToMany(Organization::class);
      }
-
      public function getTenants(Panel $panel): Collection
      {
          return $this->organizations;
@@ -87,9 +88,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
-
+        return $this->avatar_url
+        ? Storage::url($this->avatar_url)
+        : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=128&background=000000&color=ffffff'; // URL do avatar gerado
     }
+
+    public function organization(): BelongsToMany
+     {
+         return $this->belongsToMany(Organization::class);
+     }
+
 
 
 }
