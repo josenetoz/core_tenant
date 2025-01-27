@@ -2,19 +2,10 @@
 
 namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
-
-use Stripe\Refund;
-use Stripe\Stripe;
-use Stripe\Webhook;
-use App\Models\Organization;
-use App\Models\Subscription;
-use App\Models\WebhookEvent;
+use App\Models\{Organization, Subscription, SubscriptionItem, SubscriptionRefund, WebhookEvent};
 use Illuminate\Http\Request;
-use App\Models\SubscriptionItem;
-use App\Models\SubscriptionRefund;
-use Stripe\Climate\Order;
 use Stripe\Exception\SignatureVerificationException;
+use Stripe\{Stripe, Webhook};
 
 class StripeWebhookController extends Controller
 {
@@ -24,7 +15,7 @@ class StripeWebhookController extends Controller
         $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
 
         // Obtenha o conteúdo do payload e o cabeçalho de assinatura
-        $payload = $request->getContent();
+        $payload    = $request->getContent();
         $sig_header = $request->header('Stripe-Signature');
 
         try {
@@ -42,24 +33,31 @@ class StripeWebhookController extends Controller
             switch ($event->type) {
                 case 'payment_method.attached':
                     $this->handlePaymentMethodAttached($event->data->object);
+
                     break;
                 case 'customer.subscription.created':
                     $this->handleCustomerSubscriptionCreated($event->data->object);
+
                     break;
                 case 'customer.subscription.updated':
                     $this->handleCustomerSubscriptionUpdated($event->data->object);
+
                     break;
                 case 'customer.subscription.deleted':
                     $this->handleCustomerSubscriptionDeleted($event->data->object);
+
                     break;
                 case 'invoice.payment_succeeded':
                     $this->handleCustomerPaymentSucceeded($event->data->object);
+
                     break;
                 case 'charge.refund.updated':
                     $this->handleSubscriptionRefundUpdated($event->data->object);
+
                     break;
                 case 'checkout.session.expired':
                     $this->handleCheckoutSessionExpired($event->data->object);
+
                     break;
                     // Adicione outros eventos conforme necessário
                 default:
@@ -86,11 +84,11 @@ class StripeWebhookController extends Controller
 
         if ($organization) {
 
-            $organization->pm_type         = $paymentMethod->card->brand;
-            $organization->pm_last_four    = $paymentMethod->card->last4;
-            $organization->card_exp_month  = $paymentMethod->card->exp_month;
-            $organization->card_exp_year   = $paymentMethod->card->exp_year;
-            $organization->card_country    = $paymentMethod->card->country;
+            $organization->pm_type        = $paymentMethod->card->brand;
+            $organization->pm_last_four   = $paymentMethod->card->last4;
+            $organization->card_exp_month = $paymentMethod->card->exp_month;
+            $organization->card_exp_year  = $paymentMethod->card->exp_year;
+            $organization->card_country   = $paymentMethod->card->country;
             $organization->save();
         }
     }
@@ -105,27 +103,27 @@ class StripeWebhookController extends Controller
 
         if ($organization) {
             // Criar uma nova assinatura associada à organização
-            $newSubscription = new Subscription();
-            $newSubscription->stripe_id = $subscriptionMethod->id; // ID da assinatura da Stripe
+            $newSubscription                  = new Subscription();
+            $newSubscription->stripe_id       = $subscriptionMethod->id; // ID da assinatura da Stripe
             $newSubscription->organization_id = $organization->id; // Associar a organização à assinatura
 
             // Definir os outros dados da assinatura
             $newSubscription->stripe_status = $subscriptionMethod->status;
-            $newSubscription->type = $subscriptionMethod->plan->object;
-            $newSubscription->quantity = $subscriptionMethod->quantity;
-            $newSubscription->stripe_price = $subscriptionMethod->plan->id;
+            $newSubscription->type          = $subscriptionMethod->plan->object;
+            $newSubscription->quantity      = $subscriptionMethod->quantity;
+            $newSubscription->stripe_price  = $subscriptionMethod->plan->id;
 
             $newSubscription->current_period_start = now()->setTimestamp($subscriptionMethod->current_period_start);
-            $newSubscription->ends_at = now()->setTimestamp($subscriptionMethod->current_period_end);
+            $newSubscription->ends_at              = now()->setTimestamp($subscriptionMethod->current_period_end);
 
             // Calcular a data de término do período de trial, se houver
             $trialPeriodDays = $subscriptionMethod->plan->trial_period_days ?? 0;
-            $trialEndsAt = $trialPeriodDays > 0
+            $trialEndsAt     = $trialPeriodDays > 0
                 ? now()->setTimestamp($subscriptionMethod->current_period_start)->addDays($trialPeriodDays)
                 : null;
 
             $newSubscription->trial_ends_at = $trialEndsAt;
-            $newSubscription->ends_at = now()->setTimestamp($subscriptionMethod->current_period_end);
+            $newSubscription->ends_at       = now()->setTimestamp($subscriptionMethod->current_period_end);
 
             // Salvar a nova assinatura
             $newSubscription->save();
@@ -134,12 +132,12 @@ class StripeWebhookController extends Controller
             if (isset($subscriptionMethod->items->data) && count($subscriptionMethod->items->data) > 0) {
                 foreach ($subscriptionMethod->items->data as $item) {
                     // Criar um novo item de assinatura para cada item da assinatura
-                    $newSubscriptionItem = new SubscriptionItem();
+                    $newSubscriptionItem                  = new SubscriptionItem();
                     $newSubscriptionItem->subscription_id = $newSubscription->id; // Associar o item à nova assinatura
-                    $newSubscriptionItem->stripe_id = $item->id;
-                    $newSubscriptionItem->stripe_product = $item->price->product; // ID do produto relacionado
-                    $newSubscriptionItem->stripe_price = $item->price->id; // ID do preço relacionado
-                    $newSubscriptionItem->quantity = $item->quantity ?? 1; // Quantidade do item, se disponível
+                    $newSubscriptionItem->stripe_id       = $item->id;
+                    $newSubscriptionItem->stripe_product  = $item->price->product; // ID do produto relacionado
+                    $newSubscriptionItem->stripe_price    = $item->price->id; // ID do preço relacionado
+                    $newSubscriptionItem->quantity        = $item->quantity ?? 1; // Quantidade do item, se disponível
 
                     // Salvar o item de assinatura
                     $newSubscriptionItem->save();
@@ -157,7 +155,7 @@ class StripeWebhookController extends Controller
 
             // Calcular a data de término do período de trial, se existir
             $currentPeriodStart = $subscriptionMethod->current_period_start;
-            $trialPeriodDays = $subscriptionMethod->plan->trial_period_days ?? 0;
+            $trialPeriodDays    = $subscriptionMethod->plan->trial_period_days ?? 0;
 
             // Se houver período de trial, calcular a data de término
             $trialEndsAt = $trialPeriodDays > 0
@@ -165,17 +163,16 @@ class StripeWebhookController extends Controller
                 : null;
 
             // Atualizar os campos da subscription
-            $subscription->stripe_status = $subscriptionMethod->status;
-            $subscription->trial_ends_at = $trialEndsAt;
-            $subscription->ends_at = now()->setTimestamp($subscriptionMethod->current_period_end); // Final do período atual
+            $subscription->stripe_status        = $subscriptionMethod->status;
+            $subscription->trial_ends_at        = $trialEndsAt;
+            $subscription->ends_at              = now()->setTimestamp($subscriptionMethod->current_period_end); // Final do período atual
             $subscription->current_period_start = now()->setTimestamp($subscriptionMethod->current_period_start); // Início do período atual
-
 
             // Usando update() passando um array com os dados a serem atualizados
             $subscription->update([
-                'stripe_status' => $subscription->stripe_status,
-                'trial_ends_at' => $subscription->trial_ends_at,
-                'ends_at' => $subscription->ends_at,
+                'stripe_status'        => $subscription->stripe_status,
+                'trial_ends_at'        => $subscription->trial_ends_at,
+                'ends_at'              => $subscription->ends_at,
                 'current_period_start' => $subscription->current_period_start,
 
             ]);
@@ -190,24 +187,21 @@ class StripeWebhookController extends Controller
         if ($subscription) {
 
             // Atualizar os campos da subscription
-            $subscription->stripe_status = $subscriptionMethod->status;
-            $subscription->trial_ends_at = null;
-            $subscription->ends_at = now()->setTimestamp($subscriptionMethod->current_period_end); // Final do período atual
+            $subscription->stripe_status        = $subscriptionMethod->status;
+            $subscription->trial_ends_at        = null;
+            $subscription->ends_at              = now()->setTimestamp($subscriptionMethod->current_period_end); // Final do período atual
             $subscription->current_period_start = null;
-
 
             // Usando update() passando um array com os dados a serem atualizados
             $subscription->update([
-                'stripe_status' => $subscription->stripe_status,
-                'trial_ends_at' => $subscription->trial_ends_at,
-                'ends_at' => $subscription->ends_at,
+                'stripe_status'        => $subscription->stripe_status,
+                'trial_ends_at'        => $subscription->trial_ends_at,
+                'ends_at'              => $subscription->ends_at,
                 'current_period_start' => $subscription->current_period_start,
-
 
             ]);
         }
     }
-
     private function handleCustomerPaymentSucceeded($paymentMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -217,9 +211,9 @@ class StripeWebhookController extends Controller
 
             $subscription->update([
                 'hosted_invoice_url' => $paymentMethod->hosted_invoice_url,
-                'invoice_pdf' => $paymentMethod->invoice_pdf,
-                'charge' => $paymentMethod->charge,
-                'payment_intent' => $paymentMethod->payment_intent,
+                'invoice_pdf'        => $paymentMethod->invoice_pdf,
+                'charge'             => $paymentMethod->charge,
+                'payment_intent'     => $paymentMethod->payment_intent,
 
             ]);
         }
@@ -233,13 +227,13 @@ class StripeWebhookController extends Controller
         if ($refund) {
 
             $refund->update([
-                'status' => $refundMethod->status,
-                'object' => $refundMethod->object,
+                'status'              => $refundMethod->status,
+                'object'              => $refundMethod->object,
                 'balance_transaction' => $refundMethod->balance_transaction,
-                'object' => $refundMethod->object,
-                'reference' => $refundMethod->destination_details->card->reference,
-                'reference_status' => $refundMethod->destination_details->card->reference_status,
-                'failure_reason' => $refundMethod->failure_reason,
+                'object'              => $refundMethod->object,
+                'reference'           => $refundMethod->destination_details->card->reference,
+                'reference_status'    => $refundMethod->destination_details->card->reference_status,
+                'failure_reason'      => $refundMethod->failure_reason,
 
             ]);
         }
