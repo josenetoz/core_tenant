@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\{Organization, Subscription, SubscriptionItem, SubscriptionRefund, WebhookEvent};
 use Illuminate\Http\Request;
 use Stripe\Exception\SignatureVerificationException;
@@ -59,12 +60,18 @@ class StripeWebhookController extends Controller
                     $this->handleCheckoutSessionExpired($event->data->object);
 
                     break;
+
+                case 'coupon.deleted':
+                    $this->handleCouponDeleted($event->data->object);
+
+                    break;
                     // Adicione outros eventos conforme necessário
                 default:
                     break;
             }
 
             return response()->json(['status' => 'success'], 200);
+
         } catch (SignatureVerificationException $e) {
             // Armazenar falha de verificação de assinatura no banco de dados
             WebhookEvent::create([
@@ -77,6 +84,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar com a Criação de um payment method de um cliente
     private function handlePaymentMethodAttached($paymentMethod)
     {
         // Verificar se o payment method está relacionado a um cliente
@@ -93,6 +101,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar com a Criação de uma subscription e seus itens
     private function handleCustomerSubscriptionCreated($subscriptionMethod)
     {
         // Obter o customer_id da assinatura
@@ -146,6 +155,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar com a Atualização de uma subscription
     private function handleCustomerSubscriptionUpdated($subscriptionMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -179,6 +189,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar com a Exclusão de uma subscription pela stripe
     private function handleCustomerSubscriptionDeleted($subscriptionMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -202,6 +213,8 @@ class StripeWebhookController extends Controller
             ]);
         }
     }
+
+    // Metodo para lidar com o pagamento de uma subscription bem sucessido
     private function handleCustomerPaymentSucceeded($paymentMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -219,6 +232,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar Reembolso de pagamento de uma subscription
     private function handleSubscriptionRefundUpdated($refundMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -239,6 +253,7 @@ class StripeWebhookController extends Controller
         }
     }
 
+    // Metodo para lidar com a sessão de checkout expirada
     private function handleCheckoutSessionExpired($checkoutSessionMethod)
     {
         // Encontrar a subscription pelo ID da assinatura Stripe
@@ -247,7 +262,7 @@ class StripeWebhookController extends Controller
         // Verificar se a organização foi encontrada
         if (!$organization) {
             // Se a organização não for encontrada, você pode retornar ou lançar um erro
-            return; // Ou algum tratamento de erro
+            return;
         }
 
         // Obter o organization_id
@@ -258,13 +273,26 @@ class StripeWebhookController extends Controller
 
         // Verificar se a assinatura foi encontrada
         if (!$subscription) {
-            // Se a assinatura não for encontrada, você pode retornar ou lançar um erro
-            return; // Ou algum tratamento de erro
+
+            return;
         }
 
         // Atualizar o status da assinatura com o valor de status do webhook
         $subscription->update([
             'stripe_status' => $checkoutSessionMethod->status, // Atribuindo o status do webhook
         ]);
+    }
+
+    // Metodo para Deletar cupom quando ele for deletado via Stripe
+    private function handleCouponDeleted($couponMethod)
+    {
+        // Encontrar a Cupom pelo ID da Cupom Gerado pela Stripe
+        $coupon = Coupon::where('coupon_code', $couponMethod->id)->first();
+
+        if ($coupon) {
+
+            $coupon->delete();
+
+        }
     }
 }
