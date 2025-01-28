@@ -2,36 +2,27 @@
 
 namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
 use App\Mail\PasswordResetMail;
-use Filament\Tables\Actions\Action;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Fieldset;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
+use App\Models\User;
+use Filament\Forms\Components\{Fieldset, TextInput, Toggle};
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\{Action, ActionGroup, DeleteAction, EditAction, ViewAction};
+use Filament\Tables\Columns\{ImageColumn, TextColumn, ToggleColumn};
+use Filament\Tables\Table;
+use Filament\{Tables};
+use Illuminate\Support\Facades\{Hash, Mail};
+use Illuminate\Support\Str;
 
 class UserRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
+
     protected static ?string $modelLabel = 'Usuário';
+
     protected static ?string $modelLabelPlural = "Usuários";
+
     protected static ?string $title = 'Usuários do Tenant';
 
     public function form(Form $form): Form
@@ -54,14 +45,14 @@ class UserRelationManager extends RelationManager
                     ])->columns(2),
 
                 Fieldset::make('Senha')
-                    ->visible(fn($livewire) => $livewire->mountedTableActionRecord === null)
+                    ->visible(fn ($livewire) => $livewire->mountedTableActionRecord === null)
                     ->schema([
 
                         TextInput::make('password')
                             ->password()
                             ->label('Senha')
                             // Exibe apenas ao criar
-                            ->required(fn($livewire) => $livewire->mountedTableActionRecord === null), // Requerido apenas ao criar
+                            ->required(fn ($livewire) => $livewire->mountedTableActionRecord === null), // Requerido apenas ao criar
 
                     ])->columns(2),
 
@@ -125,13 +116,15 @@ class UserRelationManager extends RelationManager
                         $data['email_verified_at'] = now();
 
                         return $data;
-                    })
+                    }),
             ])
             ->actions([
 
                 ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
+                    ViewAction::make()
+                        ->color('primary'),
+                    EditAction::make()
+                        ->color('secondary'),
                     DeleteAction::make(),
                     Action::make('Resetar Senha')
                         ->requiresConfirmation()
@@ -142,7 +135,7 @@ class UserRelationManager extends RelationManager
                             $user->password = Hash::make($newPassword);
                             $user->save();
                             // Envia o e-mail com a nova senha
-                            Mail::to($user->email)->send(new PasswordResetMail($newPassword, $user->name));
+                            Mail::to($user->email)->queue(new PasswordResetMail($newPassword, $user->name));
 
                             Notification::make()
                                 ->title('Senha Alterada com Sucesso')
@@ -152,7 +145,9 @@ class UserRelationManager extends RelationManager
                         })
                         ->color('warning') // Defina a cor, como amarelo para chamar atenção
                         ->icon('heroicon-o-key'), // Ícone da chave
-                ]),
+                ])
+                ->icon('fas-sliders')
+                ->color('warning'),
 
             ])
             ->bulkActions([

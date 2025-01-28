@@ -6,13 +6,15 @@ use App\Enums\Stripe\{ProductCurrencyEnum, PromotionDurationEnum};
 use App\Filament\Admin\Resources\CouponResource\{Pages};
 use App\Models\Coupon;
 use App\Services\Stripe\Discount\{DeleteStripeCouponService};
+
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\{Fieldset, Select, TextInput};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\{DeleteAction, EditAction, ViewAction};
 use Filament\Tables\Columns\{TextColumn};
 use Filament\Tables\Table;
-use Filament\{Tables};
 
 class CouponResource extends Resource
 {
@@ -141,22 +143,28 @@ class CouponResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                ->before(function ($record, $action) {
-                    // Chamando o serviço de deleção antes de remover o registro do banco
-                    $deleteCouponService = new DeleteStripeCouponService();
+                ActionGroup::make([
+                    ViewAction::make()
+                        ->color('primary'),
+                    EditAction::make()
+                        ->color('secondary'),
+                    DeleteAction::make()
+                    ->before(function ($record, $action) {
+                        // Chamando o serviço de deleção antes de remover o registro do banco
+                        $deleteCouponService = new DeleteStripeCouponService();
 
-                    try {
-                        $deleteCouponService->deleteCouponCode($record->coupon_code);
+                        try {
+                            $deleteCouponService->deleteCouponCode($record->coupon_code);
 
-                    } catch (\Exception $e) {
-                        $action->notify('danger', 'Erro ao deletar o cupom no Stripe: ' . $e->getMessage());
+                        } catch (\Exception $e) {
+                            $action->notify('danger', 'Erro ao deletar o cupom no Stripe: ' . $e->getMessage());
 
-                        throw new \Exception('Falha na API do Stripe: ' . $e->getMessage());
-                    }
-                }),
+                            throw new \Exception('Falha na API do Stripe: ' . $e->getMessage());
+                        }
+                    }),
+                ])
+                ->icon('fas-sliders')
+                ->color('warning'),
 
             ])
             ->bulkActions([
